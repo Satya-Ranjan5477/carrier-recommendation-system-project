@@ -1,90 +1,51 @@
-// REGISTER
-const registerForm = document.getElementById("registerForm");
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } 
+from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
 
-if (registerForm) {
-    registerForm.addEventListener("submit", function(e) {
-        e.preventDefault();
+const firebaseConfig = {
+    apiKey: "AIzaSyBJH6QrR5sEHRzdTeCV-N3dl99rDs_1xzk",
+    authDomain: "career-mitracom.firebaseapp.com",
+    projectId: "career-mitracom",
+    storageBucket: "career-mitracom.firebasestorage.app",
+    messagingSenderId: "298890333500",
+    appId: "1:298890333500:web:f8acde75ceb927d7246239"
+};
 
-        const name = document.getElementById("name").value;
-        const phone = document.getElementById("phone").value;
-        const email = document.getElementById("email").value;
-        const password = document.getElementById("password").value;
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
-        // Generate Special ID
-        let userCount = localStorage.getItem("userCount");
-        if (!userCount) {
-            userCount = 1;
-        } else {
-            userCount = parseInt(userCount) + 1;
-        }
-
-        localStorage.setItem("userCount", userCount);
-
-        const specialId = "CM2026" + String(userCount).padStart(3, '0');
-
-        const user = {
-            id: specialId,
-            name: name,
-            phone: phone,
-            email: email,
-            password: password
-        };
-
-        localStorage.setItem("user", JSON.stringify(user));
-
-        alert("Registration Successful! Your ID is: " + specialId);
-
-        window.location.href = "login.html";
-    });
+// generate id
+function generateUserId(name) {
+    const letters = name.substring(0,2).toUpperCase();
+    const numbers = Math.floor(10000 + Math.random() * 90000);
+    return letters + numbers;
 }
 
+// show dashboard user
+onAuthStateChanged(auth, (user) => {
+    if (user) {
 
+        let name = user.displayName || "User";
 
-// LOGIN
-const loginForm = document.getElementById("loginForm");
+        let storedId = localStorage.getItem("userId");
 
-if (loginForm) {
-    loginForm.addEventListener("submit", function(e) {
-        e.preventDefault();
-
-        const email = document.getElementById("loginEmail").value;
-        const password = document.getElementById("loginPassword").value;
-
-        const storedUser = JSON.parse(localStorage.getItem("user"));
-
-        if (storedUser && email === storedUser.email && password === storedUser.password) {
-
-            localStorage.setItem("loggedInUser", JSON.stringify(storedUser));
-
-            alert("Login Successful!");
-            window.location.href = "dashboard.html";
-        } else {
-            alert("Invalid Email or Password");
+        if (!storedId) {
+            storedId = generateUserId(name);
+            localStorage.setItem("userId", storedId);
         }
-    });
+
+        const userName = document.getElementById("userName");
+const userId = document.getElementById("userId");
+
+if(userName){
+    userName.innerText = name;
+    userId.innerText = "User ID : " + storedId;
 }
-
-// DASHBOARD DISPLAY
-const userData = JSON.parse(localStorage.getItem("loggedInUser"));
-
-if (userData) {
-
-    const name = document.getElementById("userName");
-    const email = document.getElementById("userEmail");
-    const phone = document.getElementById("userPhone");
-    const id = document.getElementById("userId");
-
-    if (name) {
-        name.textContent = "Name: " + userData.name;
-        id.textContent = "Special ID: " + userData.id;
-        email.textContent = "Email: " + userData.email;
-        phone.textContent = "Phone: " + userData.phone;
     }
-}
+});
 
 
-
-// PROFILE PHOTO UPLOAD
+// profile photo
 const uploadPhoto = document.getElementById("uploadPhoto");
 
 if (uploadPhoto) {
@@ -98,15 +59,14 @@ if (uploadPhoto) {
     });
 }
 
-// Load saved profile image
 const savedImage = localStorage.getItem("profileImage");
 if (savedImage && document.getElementById("profileImage")) {
     document.getElementById("profileImage").src = savedImage;
 }
 
-
-// LOGOUT
-function logout() {
-    localStorage.removeItem("loggedInUser");
-    window.location.href = "login.html";
-}
+// logout
+window.logout = function() {
+    signOut(auth).then(() => {
+        window.location.href = "login.html";
+    });
+};
