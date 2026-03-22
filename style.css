@@ -8,6 +8,9 @@
 body {
     background: #f4f6fb;
 }
+html {
+    scroll-behavior: smooth;
+}
 
 /* Navbar */
 nav {
@@ -317,4 +320,80 @@ footer {
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     text-align: center;
     flex-shrink: 0;     /* Prevent shrinking */
+}
+
+.dashboard-body{
+margin:0;
+font-family:Arial;
+background:#f5f6fa;
+}
+
+.dashboard{
+display:flex;
+height:100vh;
+}
+
+.sidebar{
+width:260px;
+background:#2c3e50;
+color:white;
+padding:20px;
+text-align:center;
+}
+
+.profile img{
+width:120px;
+height:120px;
+border-radius:50%;
+margin-bottom:10px;
+}
+
+.menu button{
+width:100%;
+padding:12px;
+margin:8px 0;
+border:none;
+background:#34495e;
+color:white;
+cursor:pointer;
+border-radius:6px;
+}
+
+.menu button:hover{
+background:#3498db;
+}
+
+.main-content{
+flex:1;
+padding:30px;
+}
+
+.start-box{
+background:white;
+padding:20px;
+border-radius:10px;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
+margin-bottom:20px;
+}
+
+.start-btn{
+padding:10px 20px;
+background:#3498db;
+color:white;
+border:none;
+border-radius:5px;
+cursor:pointer;
+}
+
+.cards{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:20px;
+}
+
+.card{
+background:white;
+padding:20px;
+border-radius:10px;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
 }
