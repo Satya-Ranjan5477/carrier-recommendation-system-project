@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Dashboard - Career Mitra</title>
+<link rel="stylesheet" href="{{ url_for('static',filename='style.css') }}">
+</head>
+
+<body class="dashboard-body">
+
+<div class="dashboard">
+
+    <!-- LEFT SIDEBAR -->
+    <div class="sidebar">
+        <div class="profile">
+            <img id="profileImage" src="https://via.placeholder.com/120">
+            <h3 id="userName">Loading...</h3>
+            <p id="userId"></p>
+
+            <input type="file" id="uploadPhoto">
+        </div>
+
+        <div class="menu">
+            <button>🏠 Dashboard</button>
+            <button>🎯 Career Test</button>
+            <button>📊 My Result</button>
+            <button>📚 Learning Path</button>
+            <button onclick="logout()">🚪 Logout</button>
+        </div>
+    </div>
+
+
+    <!-- RIGHT CONTENT -->
+    <div class="main-content">
+
+        <h2>Welcome to Career Mitra 👋</h2>
+
+        <div class="start-box">
+            <h3>Discover Your Best Career Path</h3>
+            <a href="{{ url_for('form') }}">
+                <button class="start-btn">Explore Your Career</button>
+
+            </a>
+        </div>
+
+
+        <div class="cards">
+
+            <div class="card">
+                <h4>💻 Recommended Career</h4>
+                <p>Based on your interest</p>
+            </div>
+
+            <div class="card">
+                <h4>📊 Skill Analysis</h4>
+                <p>Know your strengths</p>
+            </div>
+
+            <div class="card">
+                <h4>📚 Learning Path</h4>
+                <p>Suggested courses</p>
+            </div>
+
+            <div class="card">
+                <h4>🎓 My Result</h4>
+                <p>Your last test</p>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script type="module" src="{{ url_for('static',filename='script.js') }}"></script>
+
+</body>
+</html>

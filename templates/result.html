@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+   <style>
+
+.result-container {
+     width:100%;
+     max-width: 500px;
+     background: rgba(255,255,255,0.95);
+     backdrop-filter: blur(10px);
+     padding:40px;
+     border-radius: 20px;
+     text-align: center;
+     margin: 0 auto;
+}    
+     
+.result-label {
+    font-size: 1.2rem;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 3px; 
+    margin-bottom: 8px;
+}
+
+
+.career-title {
+    font-size: 3.2rem; /* Larger size */
+    font-weight: 800;
+    margin: 10px 0 30px 0;
+    
+    
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    
+  
+    filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.1));
+    
+    
+    animation: popIn 0.6s ease-out;
+}
+
+
+@keyframes popIn {
+    0% {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* 4. Description text */
+.result-description {
+    font-style: italic;
+    color: #555;
+    margin-bottom: 40px;
+    line-height: 1.6;
+    
+}
+
+   </style>
+
+
+
+
+<div class="result-container">
+    <h2 class="result-label">Recommended Career</h2>
+    
+    <h1 class="career-title">{{ career }}</h1>
+    
+    <p class="result-description">Based on your skills, this path offers the best growth and fulfillment.</p>
+    
+    <div class="action-area">
+        <a href="/quiz" class="quiz-btn">Start Quiz</a>
+        <a href="/form" class="back-link">Try another path</a>
+    </div>
+</div>

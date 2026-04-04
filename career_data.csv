@@ -1,0 +1,60 @@
+qualification,interests,skills,career
+BTech,"coding,ai","python,sql,statistics",Data Scientist
+MCA,"ai,math","python,r,statistics",Data Scientist
+BTech,"data analysis,ai","python,pandas,ml",Data Scientist
+MCA,"ai,deep learning","python,tensorflow,keras",Data Scientist
+Diploma,"data,analysis","excel,sql,python",Data Scientist
+
+BTech,"coding,web","html,css,javascript",Web Developer
+Diploma,"web,design","html,css,bootstrap",Web Developer
+BTech,"frontend,coding","react,javascript,css",Web Developer
+MCA,"backend,coding","nodejs,express,mongodb",Web Developer
+BTech,"fullstack,coding","react,nodejs,sql",Web Developer
+
+BTech,"ai,ml","python,tensorflow,deep learning",AI Engineer
+MCA,"ai,ml","python,pytorch,neural networks",AI Engineer
+BTech,"ai,research","python,opencv,nlp",AI Engineer
+Diploma,"ai,automation","python,ml algorithms,data",AI Engineer
+MCA,"ai,robotics","python,robotics,vision",AI Engineer
+
+BTech,"security,networking","ethical hacking,network security,linux",Cybersecurity Analyst
+Diploma,"security","network security,firewall,linux",Cybersecurity Analyst
+MCA,"security,analysis","malware analysis,forensics,python",Cybersecurity Analyst
+BTech,"cyber,defense","penetration testing,security tools,linux",Cybersecurity Analyst
+BTech,"networking,security","wireshark,firewall,protocols",Cybersecurity Analyst
+
+BTech,"cloud,devops","aws,docker,kubernetes",Cloud Engineer
+MCA,"cloud","azure,virtualization,linux",Cloud Engineer
+Diploma,"cloud","gcp,cloud storage,networking",Cloud Engineer
+BTech,"cloud,security","aws,cloud security,monitoring",Cloud Engineer
+MCA,"devops,cloud","docker,ci cd,jenkins",Cloud Engineer
+
+BTech,"design,ui","figma,adobe xd,prototyping",UI/UX Designer
+Diploma,"design","photoshop,illustrator,figma",UI/UX Designer
+MCA,"ux,research","user research,wireframing,testing",UI/UX Designer
+BTech,"ui,design","figma,layout,typography",UI/UX Designer
+BTech,"ux,design","user journey,prototyping,testing",UI/UX Designer
+
+BTech,"mobile,apps","java,android sdk,ui",Mobile App Developer
+MCA,"app development","flutter,dart,api",Mobile App Developer
+Diploma,"mobile","kotlin,android studio,debugging",Mobile App Developer
+BTech,"cross platform","react native,javascript,api",Mobile App Developer
+MCA,"ios,apps","swift,xcode,ui",Mobile App Developer
+
+BTech,"gaming,design","unity,c#,game design",Game Developer
+Diploma,"gaming","unity,2d games,assets",Game Developer
+MCA,"3d,gaming","unreal engine,3d modeling,rendering",Game Developer
+BTech,"game dev","c++,graphics,physics",Game Developer
+BTech,"gaming,ai","unity,ai in games,physics",Game Developer
+
+BTech,"devops,automation","docker,jenkins,ci cd",DevOps Engineer
+MCA,"devops","kubernetes,terraform,aws",DevOps Engineer
+Diploma,"automation","shell scripting,linux,git",DevOps Engineer
+BTech,"deployment,cloud","ci cd,monitoring,logging",DevOps Engineer
+MCA,"infra,devops","terraform,aws,docker",DevOps Engineer
+
+BTech,"blockchain,crypto","solidity,web3,smart contracts",Blockchain Developer
+MCA,"blockchain","ethereum,crypto,web3",Blockchain Developer
+Diploma,"crypto","blockchain basics,bitcoin,security",Blockchain Developer
+BTech,"defi,crypto","smart contracts,solidity,defi",Blockchain Developer
+MCA,"web3,blockchain","web3,dapps,ethereum",Blockchain Developer

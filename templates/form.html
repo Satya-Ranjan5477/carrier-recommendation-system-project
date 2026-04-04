@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Career Form</title>
+
+    <!-- Select2 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<style>
+   
+
+    body {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .container {
+        width: 100%;
+        max-width: 650px;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        padding: 30px 35px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        transition: 0.3s;
+       
+    }
+
+    .container:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333;
+        font-weight: 700;
+        background: linear-gradient(135deg,#667eea,#764ba2) ;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: none;
+    }
+
+    label {
+        font-weight: 600;
+        margin-top: 15px;
+        display: block;
+        color: #444;
+         font-size: 1.2rem;
+        
+    }
+
+    select {
+        width: 100%;
+        padding: 10px;
+        margin-top: 8px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        transition: 0.3s;
+    }
+
+    select:focus {
+        border-color: #667eea;
+        outline: none;
+        box-shadow: 0 0 5px rgba(102,126,234,0.5);
+    }
+  
+    button[type="submit"] {
+        width: 100%;
+        padding: 12px;
+        margin-top: 15px; 
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: rgba(231, 226, 236, 0.815);
+        border: none;
+        border-radius: 10px;
+        font-size: 20px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    
+
+    button:hover {
+        transform: scale(1.03);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+
+
+.select2-container--default .select2-selection--multiple {
+    border-radius: 8px !important;
+    border: 1px solid #ccc !important;
+    padding: 4px 8px !important;
+    background-color: #ffffff !important;  
+    background-image: none !important;
+    min-height: 45px;
+    box-shadow:none !important;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__rendered{
+    background: none !important;
+    display: flex !important;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+
+.select2-container--default.select2-container--focus .select2-selection--multiple {
+    border-color: #876ff0 !important;   
+    box-shadow: none !important;
+    background-color: #ffffff !important;
+    font-size: 14px;
+}
+
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: #7de2f4 !important;   
+    color: #333 !important;
+    border: 1px solid #ddd !important;
+    padding: 6px 10px !important;
+    border-radius: 5px !important;   
+    font-size: 14px;  
+    font-weight: 500px;     
+}
+
+
+.select2-container--default .select2-selection-multiple .select2-selection__choice__remove {
+    color: #555 !important;
+    margin-right: 6px !important;
+    border:none !important
+
+}
+
+.select2-search__field {
+    margin-top :7px !important;
+}
+
+
+.select2-dropdown {
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background: #fff;
+}
+    
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Explore Your Career</h2>
+
+    <form method="POST" action="/predict">
+
+        <!-- Qualification -->
+        <label>Qualification</label>
+        <select name="qualification">
+            <option>BTech</option>
+            <option>MCA</option>
+            <option>Diploma</option>
+        </select>
+
+        <!-- Interests -->
+        <label>Interests</label>
+        <select name="interests[]" class="multi-select" multiple>
+            <option>coding</option>
+            <option>web</option>
+            <option>ai</option>
+            <option>data analysis</option>
+            <option>cloud</option>
+            <option>security</option>
+            <option>design</option>
+            <option>app development</option>
+            <option>gaming</option>
+            <option>devops</option>
+            <option>blockchain</option>
+        </select>
+
+        <!-- Skills -->
+        <label>Skills</label>
+        <select name="skills[]" class="multi-select" multiple>
+
+            <!-- Programming -->
+            <optgroup label="Programming">
+                <option>python</option>
+                <option>java</option>
+                <option>c++</option>
+                <option>c#</option>
+            </optgroup>
+
+            <!-- Web Development -->
+            <optgroup label="Web Development">
+                <option>html</option>
+                <option>css</option>
+                <option>javascript</option>
+                <option>bootstrap</option>
+                <option>react</option>
+                <option>nodejs</option>
+                <option>express</option>
+                <option>mongodb</option>
+            </optgroup>
+
+            <!-- AI / Data -->
+            <optgroup label="AI / Data">
+                <option>sql</option>
+                <option>pandas</option>
+                <option>ml</option>
+                <option>tensorflow</option>
+                <option>keras</option>
+                <option>deep learning</option>
+                <option>nlp</option>
+                <option>opencv</option>
+            </optgroup>
+
+            <!-- Cloud / DevOps -->
+            <optgroup label="Cloud / DevOps">
+                <option>aws</option>
+                <option>azure</option>
+                <option>gcp</option>
+                <option>docker</option>
+                <option>kubernetes</option>
+                <option>jenkins</option>
+                <option>ci cd</option>
+                <option>terraform</option>
+            </optgroup>
+
+            <!-- Design -->
+            <optgroup label="Design">
+                <option>figma</option>
+                <option>adobe xd</option>
+                <option>photoshop</option>
+                <option>illustrator</option>
+                <option>prototyping</option>
+            </optgroup>
+
+            <!-- Mobile -->
+            <optgroup label="Mobile Development">
+                <option>flutter</option>
+                <option>android sdk</option>
+                <option>react native</option>
+                <option>kotlin</option>
+                <option>swift</option>
+            </optgroup>
+
+            <!-- Security -->
+            <optgroup label="Cybersecurity">
+                <option>ethical hacking</option>
+                <option>network security</option>
+                <option>malware analysis</option>
+                <option>penetration testing</option>
+                <option>wireshark</option>
+            </optgroup>
+
+            <!-- Game Dev -->
+            <optgroup label="Game Development">
+                <option>unity</option>
+                <option>game design</option>
+                <option>3d modeling</option>
+                <option>graphics</option>
+                <option>physics</option>
+            </optgroup>
+
+            <!-- Blockchain -->
+            <optgroup label="Blockchain">
+                <option>solidity</option>
+                <option>web3</option>
+                <option>smart contracts</option>
+                <option>ethereum</option>
+                <option>crypto</option>
+            </optgroup>
+
+        </select>
+
+        <button type="submit">Get Career Recommendation</button>
+
+    </form>
+</div>
+
+<script>
+$(document).ready(function() {
+    $('.multi-select').select2({
+        placeholder: "Select options",
+        allowClear: true,width: '100%',
+        closeOnSelect:false
+    });
+});
+</script>
+
+</body>
+</html>
