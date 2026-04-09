@@ -1,9 +1,10 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request,jsonify, session
 from predict import predict_career
+from quiz_data import get_random_questions
 
 
 app = Flask(__name__)
-
+app.secret_key = "secret123"
 
 
 @app.route("/")
@@ -32,18 +33,32 @@ def form():
 
 @app.route('/predict', methods=['POST'])
 def predict():
-
     q = request.form['qualification']
-
-    # MULTI SELECT VALUES
     skills = request.form.getlist('skills[]')
     interests = request.form.getlist('interests[]')
 
     career = predict_career(q, skills, interests)
 
+    # ✅ store career in session
+    session['career'] = career
+
     return render_template('result.html', career=career)
 
 
+@app.route('/result')
+def result():
+    career = session.get('career')
+    return render_template('result.html', career=career)
+
+@app.route("/quiz")
+def quiz_page():
+    career = request.args.get("career")
+    return render_template("quiz.html", career=career)
+
+
+@app.route("/get-quiz/<career>")
+def get_quiz(career):
+    return jsonify(get_random_questions(career))
   
 
 
