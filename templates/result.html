@@ -71,9 +71,19 @@
     <h1 class="career-title">{{ career }}</h1>
     
     <p class="result-description">Based on your skills, this path offers the best growth and fulfillment.</p>
-    
+        <h3 id="scoreDisplay"></h3>
+       <button onclick="startQuiz()">Start Career Quiz</button>
+
+      
     <div class="action-area">
-        <a href="/quiz" class="quiz-btn">Start Quiz</a>
+       
         <a href="/form" class="back-link">Try another path</a>
     </div>
-</div>
+    <script>
+
+   
+    function startQuiz() {
+    const career = "{{ career }}";
+    window.location.href = `/quiz?career=${career}`;
+}
+ </script>
