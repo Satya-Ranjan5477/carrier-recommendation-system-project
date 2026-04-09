@@ -17,6 +17,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        overflow:hidden;
     }
 
     .container {
@@ -96,11 +97,14 @@
 .select2-container--default .select2-selection--multiple {
     border-radius: 8px !important;
     border: 1px solid #ccc !important;
-    padding: 4px 8px !important;
+    padding: 10px !important;
     background-color: #ffffff !important;  
     background-image: none !important;
     min-height: 45px;
     box-shadow:none !important;
+    display: flex;
+    align-items: center;
+    margin: 8px;
 }
 
 .select2-container--default .select2-selection--multiple .select2-selection__rendered{
@@ -108,6 +112,11 @@
     display: flex !important;
     flex-wrap: wrap;
     gap: 4px;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+.select2-container--default.select2-container--multiple .select2-search--inline{
+    margin: 0 !important;
 }
 
 
@@ -283,6 +292,11 @@
 </div>
 
 <script>
+    document.querySelector("form").addEventListener("submit", function() {
+    localStorage.removeItem("quizScore");
+    localStorage.removeItem("totalQuestions");
+    localStorage.removeItem("quizAnalysis");
+  });
 $(document).ready(function() {
     $('.multi-select').select2({
         placeholder: "Select options",
