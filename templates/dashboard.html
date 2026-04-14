@@ -3,6 +3,7 @@
 <head>
 <title>Dashboard - Career Mitra</title>
 <link rel="stylesheet" href="{{ url_for('static',filename='style.css') }}">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body class="dashboard-body">
@@ -23,7 +24,7 @@
             <button>🏠 Dashboard</button>
             <button>🎯 Career Test</button>
             <button>📊 My Result</button>
-            <button>📚 Learning Path</button>
+            <button onclick="openCareerPath()">📚 Learning Path</button>
             <button onclick="logout()">🚪 Logout</button>
         </div>
     </div>
@@ -32,7 +33,7 @@
     <!-- RIGHT CONTENT -->
     <div class="main-content">
 
-        <h2>Welcome to Career Mitra 👋</h2>
+       <h2 class="header-title">Welcome to Career Mitra 👋</h2>
 
         <div class="start-box">
             <h3>Discover Your Best Career Path</h3>
@@ -41,32 +42,62 @@
 
             </a>
         </div>
+     <div class="kpi-container">
+        <div class="kpi-card">
+            <h4>Total Attempts</h4>
+            <p id="totalAttempts">0</p>
+        </div>
 
+        <div class="kpi-card">
+            <h4>Average Score</h4>
+            <p id="avgScore">0</p>
+        </div>
 
-        <div class="cards">
+        <div class="kpi-card">
+            <h4>Best Score</h4>
+            <p id="bestScore">0</p>
+        </div>
+    </div>
 
-            <div class="card">
-                <h4>💻 Recommended Career</h4>
-                <p>Based on your interest</p>
+     <!-- MAIN GRID -->
+    <div class="grid-container">
+
+        <!-- LEFT SIDE -->
+        <div class="left-panel">
+
+            <div class="card1">
+                <h3>🎯 Latest Result</h3>
+                <p id="latestCareer">No result yet</p>
+                <p id="latestScore"></p>
             </div>
 
-            <div class="card">
-                <h4>📊 Skill Analysis</h4>
-                <p>Know your strengths</p>
-            </div>
-
-            <div class="card">
-                <h4>📚 Learning Path</h4>
-                <p>Suggested courses</p>
-            </div>
-
-            <div class="card">
-                <h4>🎓 My Result</h4>
-                <p>Your last test</p>
+            <div class="card1">
+                <h3>📈 Performance Chart</h3>
+               
+                <canvas id="barChart"></canvas>
+               
             </div>
 
         </div>
 
+        <!-- RIGHT SIDE -->
+        <div class="right-panel">
+
+            <div class="card1">
+                <h3>📊 Result Timeline</h3>
+                <div id="history"></div>
+            </div>
+
+            <div class="card1">
+                <h3>🥧 Score Distribution</h3>
+                <canvas id="pieChart"></canvas>
+            </div>
+
+        </div>
+
+    </div>
+
+        
     </div>
 
 </div>
