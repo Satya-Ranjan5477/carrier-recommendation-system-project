@@ -47,12 +47,28 @@ document.getElementById("loginForm").addEventListener("submit", function(e) {
     const password = document.getElementById("loginPassword").value;
 
     signInWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+
+        const user = userCredential.user;
+
+        // 🔥 STEP 1: SET FLASK SESSION
+        fetch("/set-user", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "include", 
+            body: JSON.stringify({
+                user_id: user.uid
+            })
+        })
     .then(() => {
         window.location.href = "/dashboard";
     })
     .catch(() => {
         alert("Wrong Email or Password ❌");
     });
+});
 });
 
 
