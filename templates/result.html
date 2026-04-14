@@ -59,11 +59,7 @@
     line-height: 1.6;
     
 }
-
    </style>
-
-
-
 
 <div class="result-container">
     <h2 class="result-label">Recommended Career</h2>
@@ -74,16 +70,55 @@
         <h3 id="scoreDisplay"></h3>
        <button onclick="startQuiz()">Start Career Quiz</button>
 
+       <button id="analysisBtn" onclick="showAnalysis()" style="display:none;">
+         Result Analysis
+       </button>
+
+        <div id="analysisBox"></div>
+
       
     <div class="action-area">
        
         <a href="/form" class="back-link">Try another path</a>
     </div>
-    <script>
 
-   
-    function startQuiz() {
-    const career = "{{ career }}";
-    window.location.href = `/quiz?career=${career}`;
+
+<script>
+function startQuiz() {
+const career = "{{ career }}";
+window.location.href = `/quiz?career=${career}`;
+}
+const userId = localStorage.getItem("userId");
+
+const score = localStorage.getItem(`quizScore_${userId}`);
+const total = localStorage.getItem(`totalQuestions_${userId}`);
+const analysis = JSON.parse(localStorage.getItem(`quizAnalysis_${userId}`)) || [];
+
+document.getElementById("score").innerText = `${score}/${total}`;
+
+function showAnalysis() {
+const data = JSON.parse(localStorage.getItem("quizAnalysis"));
+    let html = "";
+
+    data.forEach((q, i) => {
+        if (q.user === q.correct) {
+            html += `
+                <p style="color:green;">
+                Q${i+1}: ${q.question}<br>
+                Your Answer: ${q.user} ✅
+                </p>
+            `;
+        } else {
+            html += `
+                <p style="color:red;">
+                Q${i+1}: ${q.question}<br>
+                Your Answer: ${q.user} ❌ <br>
+                Correct Answer: ${q.correct}
+                </p>
+            `;
+        }
+    });
+
+document.getElementById("analysisBox").innerHTML = html;
 }
  </script>
