@@ -3,11 +3,18 @@
 <head>
     <title>Login - Career Mitra</title>
     <link rel="stylesheet" href="{{ url_for('static',filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='navbar-footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='login.css') }}">
 </head>
-<body class="form-body">
+<body class="auth-body">
 
-<div class="form-container">
-    <h2>Login</h2>
+{% include 'partials/navbar.html' %}
+
+<main class="page-shell narrow">
+<div class="form-container glass-panel">
+    <span class="page-kicker">Secure access</span>
+    <h2 class="page-title" style="font-size:2rem;margin-top:12px;">Login</h2>
+    <p id="loginMessage" class="form-message" style="display:none;"></p>
 
     <form id="loginForm">
         <input type="email" id="loginEmail" placeholder="Email" required>
@@ -20,10 +27,11 @@
 
     <p>New user? <a href="{{ url_for('register') }}">Register here</a></p>
 </div>
+</main>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } 
+import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail, updateProfile } 
 from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
 
 const firebaseConfig = {
@@ -38,6 +46,36 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
+function createUserId(name) {
+    const prefix = (name || "User")
+        .replace(/[^a-zA-Z]/g, "")
+        .toUpperCase()
+        .padEnd(3, "X")
+        .slice(0, 3);
+    const number = String(Math.floor(Math.random() * 999) + 1).padStart(3, "0");
+    return `${prefix}${number}`;
+}
+
+function parseUserIdentity(user) {
+    const displayName = user.displayName || "";
+    const [storedUserId, ...nameParts] = displayName.split("|");
+
+    if (/^[A-Z]{3}\d{3}$/.test(storedUserId)) {
+        return {
+            userId: storedUserId,
+            userName: nameParts.join("|") || "User",
+            needsProfileUpdate: false
+        };
+    }
+
+    const fallbackName = displayName || user.email || "User";
+    return {
+        userId: createUserId(fallbackName),
+        userName: fallbackName,
+        needsProfileUpdate: true
+    };
+}
+
 
 // LOGIN
 document.getElementById("loginForm").addEventListener("submit", function(e) {
@@ -47,28 +85,44 @@ document.getElementById("loginForm").addEventListener("submit", function(e) {
     const password = document.getElementById("loginPassword").value;
 
     signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
+    .then(async (userCredential) => {
 
         const user = userCredential.user;
+        const identity = parseUserIdentity(user);
 
-        // 🔥 STEP 1: SET FLASK SESSION
-        fetch("/set-user", {
+        if (identity.needsProfileUpdate) {
+            await updateProfile(user, {
+                displayName: `${identity.userId}|${identity.userName}`
+            });
+        }
+
+        localStorage.setItem("userId", identity.userId);
+
+        const response = await fetch("/set-user", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            credentials: "include", 
+            credentials: "include",
             body: JSON.stringify({
-                user_id: user.uid
+                user_id: identity.userId
             })
-        })
-    .then(() => {
+        });
+
+        if (!response.ok) {
+            throw new Error("Unable to set session");
+        }
+
         window.location.href = "/dashboard";
     })
-    .catch(() => {
-        alert("Wrong Email or Password ❌");
+    .catch((error) => {
+        const loginMessage = document.getElementById("loginMessage");
+        if (loginMessage) {
+            loginMessage.style.display = "block";
+            loginMessage.textContent = error.message || "Wrong Email or Password ❌";
+            loginMessage.classList.add("error");
+        }
     });
-});
 });
 
 
@@ -92,6 +146,8 @@ document.getElementById("forgotPassword").addEventListener("click", function() {
 
 });
 </script>
+
+{% include 'partials/footer.html' %}
 
 </body>
 </html>

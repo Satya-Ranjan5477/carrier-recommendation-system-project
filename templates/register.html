@@ -3,11 +3,18 @@
 <head>
     <title>Register - Career Mitra</title>
     <link rel="stylesheet" href="{{ url_for('static',filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='navbar-footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='register.css') }}">
 </head>
-<body class="form-body">
+<body class="auth-body">
 
-<div class="form-container">
-    <h2>Register</h2>
+{% include 'partials/navbar.html' %}
+
+<main class="page-shell narrow">
+<div class="form-container glass-panel">
+    <span class="page-kicker">Create account</span>
+    <h2 class="page-title" style="font-size:2rem;margin-top:12px;">Register</h2>
+    <p id="registerMessage" class="form-message" style="display:none;"></p>
 
     <form id="registerForm">
         <input type="text" id="name" placeholder="Full Name" required>
@@ -19,6 +26,7 @@
 
     <p>Already registered? <a href="{{ url_for('login') }}">Login here</a></p>
 </div>
+</main>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
@@ -37,28 +45,54 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
+function createUserId(name) {
+    const prefix = (name || "User")
+        .replace(/[^a-zA-Z]/g, "")
+        .toUpperCase()
+        .padEnd(3, "X")
+        .slice(0, 3);
+    const number = String(Math.floor(Math.random() * 999) + 1).padStart(3, "0");
+    return `${prefix}${number}`;
+}
+
 document.getElementById("registerForm").addEventListener("submit", function(e) {
     e.preventDefault();
 
     const name = document.getElementById("name").value;
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
+    const userId = createUserId(name);
 
     createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
 
         updateProfile(userCredential.user, {
-            displayName: name
-        });
+            displayName: `${userId}|${name}`
+        }).then(() => {
+            const registerMessage = document.getElementById("registerMessage");
+            if (registerMessage) {
+                registerMessage.style.display = "block";
+                registerMessage.textContent = `Registered successfully. Your User ID is ${userId}.`;
+                registerMessage.classList.add("success");
+            }
 
-        alert("Registered Successfully ✅");
-        window.location.href = "/login";
+            setTimeout(() => {
+                window.location.href = "/login";
+            }, 1800);
+        });
     })
     .catch((error) => {
-        alert(error.message);
+        const registerMessage = document.getElementById("registerMessage");
+        if (registerMessage) {
+            registerMessage.style.display = "block";
+            registerMessage.textContent = error.message;
+            registerMessage.classList.add("error");
+        }
     });
 });
 </script>
+
+{% include 'partials/footer.html' %}
 
 </body>
 </html>
