@@ -157,21 +157,57 @@ function loadQuiz() {
 
 function submitQuiz() {
     let score = 0;
-    let result = "";
+    let analysis = [];
+
+    const userId = localStorage.getItem("userId");
 
     quizData.forEach((q, i) => {
-        const ans = document.getElementById(`q${i}`).value;
+        const userAns = document.getElementById(`q${i}`).value;
 
-        if(ans === q.ans){
+        if (userAns === q.ans) {
             score++;
-            result += `<p class="correct">Q${i+1}: Correct ✅</p>`;
-        } else {
-            result += `<p class="wrong">Q${i+1}: Wrong ❌ (Correct: ${q.ans})</p>`;
         }
+
+        // store analysis
+        analysis.push({
+            question: q.q,
+            correct: q.ans,
+            user: userAns
+        });
     });
 
-    result += `<h3>Score: ${score}/7</h3>`;
-    document.getElementById("result").innerHTML = result;
+    const total = quizData.length;
+    const career = new URLSearchParams(window.location.search).get("career");
+
+    // ✅ SAVE RESULT PAGE DATA (USER-WISE)
+    localStorage.setItem(`quizScore_${userId}`, score);
+    localStorage.setItem(`totalQuestions_${userId}`, total);
+    localStorage.setItem(`quizAnalysis_${userId}`, JSON.stringify(analysis));
+
+    // ✅ CREATE RESULT OBJECT
+    const result = {
+        career: career,
+        score: score,
+        total: total,
+        date: new Date().toLocaleString()
+    };
+
+    // ✅ USER-SPECIFIC HISTORY KEY
+    const historyKey = `history_${userId}`;
+
+    // ✅ GET OLD HISTORY (ONLY THIS USER)
+    let history = JSON.parse(localStorage.getItem(historyKey)) || [];
+
+    // ✅ ADD NEW RESULT
+    history.push(result);
+
+    // ✅ SAVE BACK
+    localStorage.setItem(historyKey, JSON.stringify(history));
+
+    console.log("Saved User History:", history);
+
+    // ✅ REDIRECT TO DASHBOARD (RESULT WILL SHOW THERE)
+    window.location.href = "/dashboard";
 }
 </script>
 
