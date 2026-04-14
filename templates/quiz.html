@@ -1,215 +1,108 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<style>
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* MAIN CARD */
-.container {
-    width: 100%;
-    max-width: 650px;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(12px);
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
-    animation: fadeIn 0.6s ease-in-out;
-}
-
-/* TITLE */
-#title {
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 26px;
-    font-weight: bold;
-    background: linear-gradient(135deg,#667eea,#764ba2);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-/* QUESTIONS */
-.question {
-    margin-bottom: 18px;
-}
-
-.question p {
-    font-weight: 600;
-    margin-bottom: 6px;
-    color: #333;
-}
-
-/* DROPDOWN */
-select {
-    width: 100%;
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    transition: 0.3s;
-    font-size: 14px;
-}
-
-select:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 6px rgba(102,126,234,0.4);
-    outline: none;
-}
-
-/* BUTTON */
-button {
-    width: 100%;
-    padding: 12px;
-    margin-top: 15px;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-size: 18px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-button:hover {
-    transform: scale(1.03);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-}
-
-/* RESULT */
-#result {
-    margin-top: 20px;
-}
-
-.correct {
-    color: green;
-    font-weight: 600;
-}
-
-.wrong {
-    color: red;
-    font-weight: 600;
-}
-
-/* ANIMATION */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Quiz</title>
+    <link rel="stylesheet" href="{{ url_for('static',filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='navbar-footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='quiz.css') }}">
 </head>
+<body class="quiz-body">
+    {% include 'partials/navbar.html' %}
 
-<body>
+    <main class="page-shell narrow">
+        <div class="quiz-card">
+            <span class="page-kicker">Assessment</span>
+            <h2 id="title" class="page-title" style="font-size:2rem;margin-top:12px;"></h2>
+            <div id="quiz"></div>
+            <button onclick="submitQuiz()">Submit</button>
+            <div id="result"></div>
+        </div>
+    </main>
 
-<div class="container">
-<h2 id="title"></h2>
-<div id="quiz"></div>
-<button onclick="submitQuiz()">Submit</button>
-<div id="result"></div>
-</div>
+    <script>
+        const career = new URLSearchParams(window.location.search).get("career");
 
-<script>
-const career = new URLSearchParams(window.location.search).get("career");
-document.getElementById("title").innerText = career + " Quiz";
+        if (!career) {
+            window.location.href = "/form";
+        } else {
+            document.getElementById("title").innerText = career + " Quiz";
 
-let quizData = [];
+            let quizData = [];
 
-fetch(`/get-quiz/${career}`)
-.then(res => res.json())
-.then(data => {
-    quizData = data;
-    loadQuiz();
-});
+            fetch(`/get-quiz/${career}`)
+            .then(res => res.json())
+            .then(data => {
+                quizData = data;
+                loadQuiz();
+            });
 
-function loadQuiz() {
-    const container = document.getElementById("quiz");
+            function loadQuiz() {
+                const container = document.getElementById("quiz");
 
-    quizData.forEach((q, i) => {
-        let options = `<option value="">Select</option>`;
-        q.opt.forEach(o => options += `<option>${o}</option>`);
+                quizData.forEach((q, i) => {
+                    let options = `<option value="">Select</option>`;
+                    q.opt.forEach(o => options += `<option>${o}</option>`);
 
-        container.innerHTML += `
-        <div class="question">
-            <p>${i+1}. ${q.q}</p>
-            <select id="q${i}">${options}</select>
-        </div>`;
-    });
-}
+                    container.innerHTML += `
+                    <div class="question">
+                        <p>${i + 1}. ${q.q}</p>
+                        <select id="q${i}">${options}</select>
+                    </div>`;
+                });
+            }
 
-function submitQuiz() {
-    let score = 0;
-    let analysis = [];
+            function submitQuiz() {
+                let score = 0;
+                let analysis = [];
+                const userId = localStorage.getItem("userId");
 
-    const userId = localStorage.getItem("userId");
+                if (!userId) {
+                    alert("Please log in again to save your quiz result.");
+                    window.location.href = "/login";
+                    return;
+                }
 
-    quizData.forEach((q, i) => {
-        const userAns = document.getElementById(`q${i}`).value;
+                quizData.forEach((q, i) => {
+                    const userAns = document.getElementById(`q${i}`).value;
 
-        if (userAns === q.ans) {
-            score++;
+                    if (userAns === q.ans) {
+                        score++;
+                    }
+
+                    analysis.push({
+                        question: q.q,
+                        correct: q.ans,
+                        user: userAns
+                    });
+                });
+
+                const total = quizData.length;
+                localStorage.setItem(`quizScore_${userId}`, score);
+                localStorage.setItem(`totalQuestions_${userId}`, total);
+                localStorage.setItem(`quizAnalysis_${userId}`, JSON.stringify(analysis));
+
+                const result = {
+                    career: career,
+                    score: score,
+                    total: total,
+                    date: new Date().toLocaleString()
+                };
+
+                const historyKey = `history_${userId}`;
+                const history = JSON.parse(localStorage.getItem(historyKey)) || [];
+                history.push(result);
+                localStorage.setItem(historyKey, JSON.stringify(history));
+
+                window.location.href = "/result";
+            }
+
+            window.submitQuiz = submitQuiz;
         }
+    </script>
 
-        // store analysis
-        analysis.push({
-            question: q.q,
-            correct: q.ans,
-            user: userAns
-        });
-    });
-
-    const total = quizData.length;
-    const career = new URLSearchParams(window.location.search).get("career");
-
-    // ✅ SAVE RESULT PAGE DATA (USER-WISE)
-    localStorage.setItem(`quizScore_${userId}`, score);
-    localStorage.setItem(`totalQuestions_${userId}`, total);
-    localStorage.setItem(`quizAnalysis_${userId}`, JSON.stringify(analysis));
-
-    // ✅ CREATE RESULT OBJECT
-    const result = {
-        career: career,
-        score: score,
-        total: total,
-        date: new Date().toLocaleString()
-    };
-
-    // ✅ USER-SPECIFIC HISTORY KEY
-    const historyKey = `history_${userId}`;
-
-    // ✅ GET OLD HISTORY (ONLY THIS USER)
-    let history = JSON.parse(localStorage.getItem(historyKey)) || [];
-
-    // ✅ ADD NEW RESULT
-    history.push(result);
-
-    // ✅ SAVE BACK
-    localStorage.setItem(historyKey, JSON.stringify(history));
-
-    console.log("Saved User History:", history);
-
-    // ✅ REDIRECT TO DASHBOARD (RESULT WILL SHOW THERE)
-    window.location.href = "/dashboard";
-}
-</script>
+{% include 'partials/footer.html' %}
 
 </body>
 </html>

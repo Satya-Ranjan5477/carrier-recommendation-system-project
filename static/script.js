@@ -1,6 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, signOut } 
-from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyBJH6QrR5sEHRzdTeCV-N3dl99rDs_1xzk",
@@ -13,74 +12,140 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const isDashboardPage = document.body.classList.contains("dashboard-body");
 
-// generate id
-function generateUserId(name) {
-    const letters = name.substring(0,2).toUpperCase();
-    const numbers = Math.floor(10000 + Math.random() * 90000);
-    return letters + numbers;
+function parseUserIdentity(user) {
+    const displayName = user && user.displayName ? user.displayName : "";
+    const [storedUserId, ...nameParts] = displayName.split("|");
+
+    if (/^[A-Z]{3}\d{3}$/.test(storedUserId)) {
+        return {
+            userId: storedUserId,
+            userName: nameParts.join("|") || "User"
+        };
+    }
+
+    return {
+        userId: localStorage.getItem("userId") || user.uid,
+        userName: displayName || "User"
+    };
 }
 
-
+function getProfileImageKey(userId) {
+    return `profileImage_${userId}`;
+}
 
 window.addEventListener("load", () => {
-    const slider = document.querySelector(".features");
-    slider.scrollLeft = 0;
+    const features = document.querySelector(".features");
+
+    if (features) {
+        features.scrollLeft = 0;
+    }
 });
 
 window.openCareerPath = function () {
     window.location.href = "/career-path";
 };
 
-// show dashboard user
-  onAuthStateChanged(auth, (user) => {
+window.openCareerTest = function () {
+    window.location.href = "/form";
+};
 
-    const latestCareer = document.getElementById("latestCareer");
-    const latestScore = document.getElementById("latestScore");
-    const historyDiv = document.getElementById("history");
-    const totalAttemptsEl = document.getElementById("totalAttempts");
-    const avgScoreEl = document.getElementById("avgScore");
-    const bestScoreEl = document.getElementById("bestScore");
+window.openDashboard = function () {
+    window.location.href = "/dashboard";
+};
 
-    // 🔥 CLEAR UI FIRST (IMPORTANT)
-    if (historyDiv) historyDiv.innerHTML = "";
-    if (latestCareer) latestCareer.innerText = "Loading...";
-    if (latestScore) latestScore.innerText = "";
+window.openResultPage = function () {
+    window.location.href = "/result";
+};
 
-    if (user) {
+if (isDashboardPage) {
+    onAuthStateChanged(auth, (user) => {
+        const latestCareer = document.getElementById("latestCareer");
+        const latestScore = document.getElementById("latestScore");
+        const historyDiv = document.getElementById("history");
+        const totalAttemptsEl = document.getElementById("totalAttempts");
+        const avgScoreEl = document.getElementById("avgScore");
+        const bestScoreEl = document.getElementById("bestScore");
 
-        const userId = user.uid;
+        if (historyDiv) historyDiv.innerHTML = "";
+        if (latestCareer) latestCareer.innerText = "Loading...";
+        if (latestScore) latestScore.innerText = "";
 
-        // ✅ ALWAYS update correct userId
-        localStorage.setItem("userId", userId);
+        if (user) {
+            const identity = parseUserIdentity(user);
+            const userId = identity.userId;
+            localStorage.setItem("userId", userId);
 
-        console.log("Logged User ID:", userId);
+            const userName = document.getElementById("userName");
+            const userIdText = document.getElementById("userId");
 
-        const userName = document.getElementById("userName");
-        const userIdText = document.getElementById("userId");
+            if (userName) userName.innerText = identity.userName;
+            if (userIdText) userIdText.innerText = "User ID : " + userId;
 
-        if (userName) userName.innerText = user.displayName || "User";
-        if (userIdText) userIdText.innerText = "User ID : " + userId;
-        loadDashboard(userId);
+            loadDashboard(userId);
+            return;
+        }
 
-    } else {
-        // ❌ No user → clear everything
         localStorage.removeItem("userId");
 
-        latestCareer.innerText = "No user logged in";
-        latestScore.innerText = "";
+        if (latestCareer) latestCareer.innerText = "No user logged in";
+        if (latestScore) latestScore.innerText = "";
+        if (totalAttemptsEl) totalAttemptsEl.innerText = 0;
+        if (avgScoreEl) avgScoreEl.innerText = 0;
+        if (bestScoreEl) bestScoreEl.innerText = 0;
 
-        totalAttemptsEl.innerText = 0;
-        avgScoreEl.innerText = 0;
-        bestScoreEl.innerText = 0;
-         window.location.href = "/login";
+        window.location.href = "/login";
+    });
+
+    window.logout = async function () {
+        try {
+            await fetch("/logout", { credentials: "include" });
+        } catch (error) {
+            console.warn("Logout request failed", error);
+        }
+
+        try {
+            await signOut(auth);
+        } catch (error) {
+            console.warn("Firebase sign-out failed", error);
+        }
+
+        localStorage.removeItem("userId");
+        window.location.href = "/login";
+    };
+
+    const uploadPhoto = document.getElementById("uploadPhoto");
+
+    if (uploadPhoto) {
+        uploadPhoto.addEventListener("change", function () {
+            const currentUserId = localStorage.getItem("userId");
+            if (!currentUserId || !this.files || !this.files[0]) {
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function () {
+                localStorage.setItem(getProfileImageKey(currentUserId), reader.result);
+                const profileImage = document.getElementById("profileImage");
+                if (profileImage) {
+                    profileImage.src = reader.result;
+                }
+            };
+
+            reader.readAsDataURL(this.files[0]);
+        });
     }
-});
 
+    const currentUserId = localStorage.getItem("userId");
+    const savedImage = currentUserId ? localStorage.getItem(getProfileImageKey(currentUserId)) : null;
+    const profileImage = document.getElementById("profileImage");
+    if (savedImage && profileImage) {
+        profileImage.src = savedImage;
+    }
+}
 
-// ✅ DASHBOARD FUNCTION
 function loadDashboard(userId) {
-
     const history = JSON.parse(localStorage.getItem(`history_${userId}`)) || [];
 
     const latestCareer = document.getElementById("latestCareer");
@@ -90,149 +155,110 @@ function loadDashboard(userId) {
     const avgScoreEl = document.getElementById("avgScore");
     const bestScoreEl = document.getElementById("bestScore");
 
-    historyDiv.innerHTML = "";
-
-    if (history.length > 0) {
-
-        let totalScore = 0;
-        let bestScore = 0;
-
-        const last = history[history.length - 1];
-        latestCareer.innerText = last.career;
-        latestScore.innerText = `Score: ${last.score}/${last.total}`;
-
-        history.forEach((item, i) => {
-
-            totalScore += item.score;
-
-            if (item.score > bestScore) {
-                bestScore = item.score;
-            }
-          
-            let html = ""; 
-            [...history].reverse().forEach((item, i) => {
-            /*historyDiv.innerHTML += `*/
-            html += `
-        <p>
-            <b>${item.career}</b> - ${item.score}/${item.total}
-            ${i === 0 ? '<span style="color:green;"> (Latest)</span>' : ''}
-            <br>
-            <small>${item.date}</small>
-        </p><hr>
-    `;
-});
-       historyDiv.innerHTML = html;
-        });
-
-        const totalAttempts = history.length;
-        const avgScore = (totalScore / totalAttempts).toFixed(1);
-
-        totalAttemptsEl.innerText = totalAttempts;
-        avgScoreEl.innerText = avgScore;
-        bestScoreEl.innerText = bestScore;
-
-        // 🔥 Charts (Destroy old charts if exist)
-     // ✅ SAFE CHART RENDER
-setTimeout(() => {
-
-    const barCanvas = document.getElementById("barChart");
-    const pieCanvas = document.getElementById("pieChart");
-
-    if (!barCanvas || !pieCanvas) {
-        console.error("Canvas missing!");
+    if (!historyDiv) {
         return;
     }
 
-    // 🔥 Destroy safely
-    if (window.barChart && typeof window.barChart.destroy === "function") {
-        window.barChart.destroy();
+    historyDiv.innerHTML = "";
+
+    if (history.length === 0) {
+        if (latestCareer) latestCareer.innerText = "No attempts yet";
+        if (latestScore) latestScore.innerText = "Take a quiz to see results";
+        if (totalAttemptsEl) totalAttemptsEl.innerText = 0;
+        if (avgScoreEl) avgScoreEl.innerText = 0;
+        if (bestScoreEl) bestScoreEl.innerText = 0;
+        return;
     }
 
-    if (window.pieChart && typeof window.pieChart.destroy === "function") {
-        window.pieChart.destroy();
-    }
+    const latest = history[history.length - 1];
+    let totalScore = 0;
+    let bestScore = 0;
 
-    const labels = history.map((h, i) => `Attempt ${i + 1}`);
-    const scores = history.map(h => h.score);
+    if (latestCareer) latestCareer.innerText = latest.career;
+    if (latestScore) latestScore.innerText = `Score: ${latest.score}/${latest.total}`;
 
-    // ✅ BAR CHART
-    window.barChart = new Chart(barCanvas.getContext("2d"), {
-        type: "bar",
-        data: {
-            labels: labels,
-            datasets: [{
-                label: "Quiz Score",
-                data: scores,
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false
+    [...history].reverse().forEach((item, index) => {
+        totalScore += item.score;
+        bestScore = Math.max(bestScore, item.score);
+
+        historyDiv.innerHTML += `
+            <p>
+                <b>${item.career}</b> - ${item.score}/${item.total}
+                ${index === 0 ? '<span style="color:green;"> (Latest)</span>' : ''}
+                <br>
+                <small>${item.date}</small>
+            </p><hr>
+        `;
+    });
+
+    const totalAttempts = history.length;
+    const avgScore = (totalScore / totalAttempts).toFixed(1);
+
+    if (totalAttemptsEl) totalAttemptsEl.innerText = totalAttempts;
+    if (avgScoreEl) avgScoreEl.innerText = avgScore;
+    if (bestScoreEl) bestScoreEl.innerText = bestScore;
+
+    setTimeout(() => {
+        const barCanvas = document.getElementById("barChart");
+        const pieCanvas = document.getElementById("pieChart");
+
+        if (!barCanvas || !pieCanvas || typeof Chart === "undefined") {
+            return;
         }
-    });
 
-    // ✅ PIE CHART
-    let good = 0, average = 0, poor = 0;
-
-    history.forEach(h => {
-        if (h.score >= 5) good++;
-        else if (h.score >= 3) average++;
-        else poor++;
-    });
-
-    window.pieChart = new Chart(pieCanvas.getContext("2d"), {
-        type: "doughnut",
-        data: {
-            labels: ["Good", "Average", "Poor"],
-            datasets: [{
-                data: [good, average, poor]
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false
+        if (window.barChart && typeof window.barChart.destroy === "function") {
+            window.barChart.destroy();
         }
-    });
 
-}, 300); // 🔥 IMPORTANT DELAY
+        if (window.pieChart && typeof window.pieChart.destroy === "function") {
+            window.pieChart.destroy();
+        }
 
-    } else {
-        // ✅ NEW USER SAFE STATE
-        latestCareer.innerText = "No attempts yet";
-        latestScore.innerText = "Take a quiz to see results";
+        const labels = history.map((_, index) => `Attempt ${index + 1}`);
+        const scores = history.map((item) => item.score);
 
-        totalAttemptsEl.innerText = 0;
-        avgScoreEl.innerText = 0;
-        bestScoreEl.innerText = 0;
-    }
+        window.barChart = new Chart(barCanvas.getContext("2d"), {
+            type: "bar",
+            data: {
+                labels,
+                datasets: [{
+                    label: "Quiz Score",
+                    data: scores,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+
+        let good = 0;
+        let average = 0;
+        let poor = 0;
+
+        history.forEach((item) => {
+            if (item.score >= 5) {
+                good += 1;
+            } else if (item.score >= 3) {
+                average += 1;
+            } else {
+                poor += 1;
+            }
+        });
+
+        window.pieChart = new Chart(pieCanvas.getContext("2d"), {
+            type: "doughnut",
+            data: {
+                labels: ["Good", "Average", "Poor"],
+                datasets: [{
+                    data: [good, average, poor]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+    }, 150);
 }
-
-// profile photo
-const uploadPhoto = document.getElementById("uploadPhoto");
-
-if (uploadPhoto) {
-    uploadPhoto.addEventListener("change", function() {
-        const reader = new FileReader();
-        reader.onload = function() {
-            localStorage.setItem("profileImage", reader.result);
-            document.getElementById("profileImage").src = reader.result;
-        };
-        reader.readAsDataURL(this.files[0]);
-    });
-}
-
-const savedImage = localStorage.getItem("profileImage");
-if (savedImage && document.getElementById("profileImage")) {
-    document.getElementById("profileImage").src = savedImage;
-}
-
-// logout
-window.logout = function() {
-     fetch("/logout") // 🔥 clear flask session
-    .then(() => {
-    signOut(auth).then(() => {
-        window.location.href = "/login";
-    });
-});
-};

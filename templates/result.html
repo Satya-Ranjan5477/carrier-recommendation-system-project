@@ -1,124 +1,86 @@
 <!DOCTYPE html>
-<html>
-   <style>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Result - Career Mitra</title>
+    <link rel="stylesheet" href="{{ url_for('static',filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='navbar-footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='result.css') }}">
+</head>
+<body class="result-body">
+    {% include 'partials/navbar.html' %}
 
-.result-container {
-     width:100%;
-     max-width: 500px;
-     background: rgba(255,255,255,0.95);
-     backdrop-filter: blur(10px);
-     padding:40px;
-     border-radius: 20px;
-     text-align: center;
-     margin: 0 auto;
-}    
-     
-.result-label {
-    font-size: 1.2rem;
-    color: #888;
-    text-transform: uppercase;
-    letter-spacing: 3px; 
-    margin-bottom: 8px;
-}
+    <main class="result-page">
+        <section class="result-shell">
+            <h2 class="result-label">Recommended Career</h2>
+            <h1 class="career-title">{{ career or 'Career not found' }}</h1>
+            <p class="result-description">Based on your skills, this path offers the best growth and fulfillment.</p>
 
+            <h3 id="scoreDisplay" class="result-meta">Take the quiz to see your latest score.</h3>
 
-.career-title {
-    font-size: 3.2rem; /* Larger size */
-    font-weight: 800;
-    margin: 10px 0 30px 0;
-    
-    
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    
-  
-    filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.1));
-    
-    
-    animation: popIn 0.6s ease-out;
-}
+            <div class="result-actions">
+                <button type="button" class="primary-action" onclick="startQuiz()">Start Career Quiz</button>
+                <button type="button" id="analysisBtn" class="secondary-action" onclick="showAnalysis()" style="display:none;">Result Analysis</button>
+                <a href="{{ url_for('form') }}" class="secondary-action">Try another path</a>
+                <a href="{{ url_for('dashboard') }}" class="secondary-action">Go to Dashboard</a>
+            </div>
 
+            <div id="analysisBox" class="analysis-box" style="display:none;"></div>
+        </section>
+    </main>
 
-@keyframes popIn {
-    0% {
-        transform: scale(0.9);
-        opacity: 0;
-    }
-    100% {
-        transform: scale(1);
-        opacity: 1;
-    }
-}
+    <script>
+        const career = {{ career|tojson }};
+        const userId = localStorage.getItem("userId");
+        const scoreDisplay = document.getElementById("scoreDisplay");
+        const analysisBtn = document.getElementById("analysisBtn");
+        const analysisBox = document.getElementById("analysisBox");
+        const score = userId ? localStorage.getItem(`quizScore_${userId}`) : null;
+        const total = userId ? localStorage.getItem(`totalQuestions_${userId}`) : null;
+        const analysis = userId ? (JSON.parse(localStorage.getItem(`quizAnalysis_${userId}`) || "[]")) : [];
 
-/* 4. Description text */
-.result-description {
-    font-style: italic;
-    color: #555;
-    margin-bottom: 40px;
-    line-height: 1.6;
-    
-}
-   </style>
-
-<div class="result-container">
-    <h2 class="result-label">Recommended Career</h2>
-    
-    <h1 class="career-title">{{ career }}</h1>
-    
-    <p class="result-description">Based on your skills, this path offers the best growth and fulfillment.</p>
-        <h3 id="scoreDisplay"></h3>
-       <button onclick="startQuiz()">Start Career Quiz</button>
-
-       <button id="analysisBtn" onclick="showAnalysis()" style="display:none;">
-         Result Analysis
-       </button>
-
-        <div id="analysisBox"></div>
-
-      
-    <div class="action-area">
-       
-        <a href="/form" class="back-link">Try another path</a>
-    </div>
-
-
-<script>
-function startQuiz() {
-const career = "{{ career }}";
-window.location.href = `/quiz?career=${career}`;
-}
-const userId = localStorage.getItem("userId");
-
-const score = localStorage.getItem(`quizScore_${userId}`);
-const total = localStorage.getItem(`totalQuestions_${userId}`);
-const analysis = JSON.parse(localStorage.getItem(`quizAnalysis_${userId}`)) || [];
-
-document.getElementById("score").innerText = `${score}/${total}`;
-
-function showAnalysis() {
-const data = JSON.parse(localStorage.getItem("quizAnalysis"));
-    let html = "";
-
-    data.forEach((q, i) => {
-        if (q.user === q.correct) {
-            html += `
-                <p style="color:green;">
-                Q${i+1}: ${q.question}<br>
-                Your Answer: ${q.user} ✅
-                </p>
-            `;
-        } else {
-            html += `
-                <p style="color:red;">
-                Q${i+1}: ${q.question}<br>
-                Your Answer: ${q.user} ❌ <br>
-                Correct Answer: ${q.correct}
-                </p>
-            `;
+        if (score && total) {
+            scoreDisplay.innerText = `Latest quiz score: ${score}/${total}`;
+            analysisBtn.style.display = "inline-flex";
         }
-    });
 
-document.getElementById("analysisBox").innerHTML = html;
-}
- </script>
+        function startQuiz() {
+            if (!career) {
+                window.location.href = "{{ url_for('form') }}";
+                return;
+            }
+
+            window.location.href = `/quiz?career=${encodeURIComponent(career)}`;
+        }
+
+        function showAnalysis() {
+            if (!analysis.length) {
+                analysisBox.style.display = "block";
+                analysisBox.innerHTML = "<p>No quiz analysis available yet.</p>";
+                return;
+            }
+
+            let html = "";
+
+            analysis.forEach((item, index) => {
+                const isCorrect = item.user === item.correct;
+                html += `
+                    <div class="analysis-item">
+                        <p><strong>Q${index + 1}:</strong> ${item.question}</p>
+                        <p>Your Answer: ${item.user || 'Not answered'} ${isCorrect ? '✅' : '❌'}</p>
+                        ${isCorrect ? '' : `<p>Correct Answer: ${item.correct}</p>`}
+                    </div>
+                `;
+            });
+
+            analysisBox.innerHTML = html;
+            analysisBox.style.display = "block";
+            analysisBtn.style.display = "none";
+        }
+    </script>
+
+{% include 'partials/footer.html' %}
+
+</body>
+</html>

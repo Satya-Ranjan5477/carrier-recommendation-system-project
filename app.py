@@ -92,7 +92,7 @@ def set_user():
 @app.route("/logout")
 def logout():
     session.clear()
-    return jsonify({"message": "Logged out"}) 
+    return redirect("/login")
 
 
 

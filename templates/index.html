@@ -5,23 +5,12 @@
     <title>Career Mitra - Smart Career Guide</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static',filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='navbar-footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='index.css') }}">
 </head>
 <body>
 
-    <!-- Navbar -->
-    <nav>
-        <div class="logo-area">
-            <div class="logo">Career Mitra</div>
-            <div class="sub-logo">Online Career Recommendation</div>
-        </div>
-
-        <ul>
-            <li><a href="#home">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="{{ url_for('login') }}">Login</a></li>
-            <li><a href="{{ url_for('register') }}">Register</a></li>
-        </ul>
-    </nav>
+    {% include 'partials/navbar.html' %}
 
     <!-- Hero Section -->
     <section class="hero" id="home">
@@ -87,4 +76,4 @@
     <script src="{{ url_for('static',filename='script.js') }}"></script>
 
 </body>
-</html>     
+</html>
