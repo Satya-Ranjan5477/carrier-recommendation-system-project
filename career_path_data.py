@@ -230,6 +230,228 @@ career_paths = {
             {"name": "Dapp University YouTube", "link": "https://www.youtube.com/@DappUniversity"},
             {"name": "Ethereum Docs", "link": "https://ethereum.org"}
         ]
+    },
+
+    "Data Analyst": {
+        "steps": [
+            "Learn Excel & SQL",
+            "Data Cleaning",
+            "Data Visualization (Tableau/Power BI)",
+            "Python for Analysis",
+            "Statistics Basics",
+            "Projects",
+            "Portfolio"
+        ],
+        "skills": ["Excel", "SQL", "Tableau", "Power BI", "Python"],
+        "projects": [
+            "Sales Dashboard",
+            "Customer Analysis",
+            "Business Report"
+        ],
+        "resources": [
+            
+                 {"name": "Google Data Analytics", "link": "https://www.coursera.org"},
+                 {"name": "Kaggle", "link": "https://www.kaggle.com"},
+                 {"name": "Alex The Analyst YouTube", "link": "https://www.youtube.com/@AlexTheAnalyst"},
+                 {"name": "Power BI Docs", "link": "https://learn.microsoft.com"}
+                   ]
+        
+    },
+
+    "Machine Learning Engineer": {
+        "steps": [
+            "Python",
+            "Statistics & Math",
+            "Machine Learning",
+            "Deep Learning",
+            "Model Deployment",
+            "Projects"
+        ],
+        "skills": ["Python", "Scikit-learn", "TensorFlow", "PyTorch"],
+        "projects": [
+            "Recommendation System",
+            "Spam Classifier",
+            "ML API Deployment"
+        ],
+        "resources": [
+            {"name": "Coursera ML", "link": "https://www.coursera.org/learn/machine-learning"},
+            {"name": "Fast.ai", "link": "https://www.fast.ai"},
+            {"name": "Krish Naik YouTube", "link": "https://www.youtube.com/@krishnaik06"},
+            {"name": "Scikit-learn Docs", "link": "https://scikit-learn.org"}
+        ]
+    },
+
+    "Software Engineer": {
+        "steps": [
+            "Programming (Java/Python)",
+            "Data Structures & Algorithms",
+            "OOP Concepts",
+            "System Design",
+            "Projects",
+            "Interview Prep"
+        ],
+        "skills": ["Java", "Python", "DSA", "OOP"],
+        "projects": [
+            "Library System",
+            "Chat App",
+            "REST API"
+        ],
+        "resources": [
+            {"name": "LeetCode", "link": "https://leetcode.com"},
+            {"name": "GeeksforGeeks", "link": "https://www.geeksforgeeks.org"},
+            {"name": "CodeWithHarry YouTube", "link": "https://www.youtube.com/@CodeWithHarry"},
+            {"name": "CS50 Harvard", "link": "https://cs50.harvard.edu"}
+        ]
+    },
+
+    "System Administrator": {
+        "steps": [
+            "Operating Systems",
+            "Linux",
+            "Networking",
+            "Server Management",
+            "Shell Scripting",
+            "Projects"
+        ],
+        "skills": ["Linux", "Networking", "Shell Scripting"],
+        "projects": [
+            "Server Setup",
+            "Network Configuration"
+        ],
+        "resources": [
+            {"name": "Linux Foundation", "link": "https://training.linuxfoundation.org"},
+            {"name": "Red Hat Training", "link": "https://www.redhat.com"},
+            {"name": "NetworkChuck YouTube", "link": "https://www.youtube.com/@NetworkChuck"},
+            {"name": "Ubuntu Docs", "link": "https://ubuntu.com/tutorials"}
+        ]
+    },
+
+    "Software Tester": {
+        "steps": [
+            "Manual Testing",
+            "Test Cases",
+            "Automation Testing",
+            "Selenium",
+            "Bug Tracking",
+            "Projects"
+        ],
+        "skills": ["Selenium", "Testing", "QA"],
+        "projects": [
+            "Website Testing",
+            "Automation Scripts"
+        ],
+        "resources": [
+           {"name": "Guru99 Testing", "link": "https://www.guru99.com/software-testing.html"},
+           {"name": "Test Automation University", "link": "https://testautomationu.applitools.com"},
+           {"name": "Automation Step by Step YouTube", "link": "https://www.youtube.com/@AutomationStepByStep"},
+           {"name": "Selenium Docs", "link": "https://www.selenium.dev/documentation"}
+        ]
+    },
+
+    "AR/VR Developer": {
+        "steps": [
+            "3D Basics",
+            "Unity / Unreal",
+            "C# / C++",
+            "VR SDKs",
+            "Projects"
+        ],
+        "skills": ["Unity", "3D Modeling", "C#"],
+        "projects": [
+            "VR Game",
+            "AR App"
+        ],
+        "resources": [
+            {"name": "Unity Learn", "link": "https://learn.unity.com"},
+            {"name": "Unreal Engine Docs", "link": "https://dev.epicgames.com"},
+            {"name": "Valem YouTube", "link": "https://www.youtube.com/@ValemVR"},
+            {"name": "Blender Docs", "link": "https://docs.blender.org"}
+        ]
+    },
+
+    "Embedded Engineer": {
+        "steps": [
+            "C Programming",
+            "Microcontrollers",
+            "Embedded Systems",
+            "IoT",
+            "Projects"
+        ],
+        "skills": ["C", "Arduino", "Embedded Systems"],
+        "projects": [
+            "Smart Home System",
+            "IoT Device"
+        ],
+        "resources": [
+            {"name": "Arduino Docs", "link": "https://www.arduino.cc"},
+            {"name": "Embedded Systems Course", "link": "https://www.coursera.org"},
+            {"name": "GreatScott YouTube", "link": "https://www.youtube.com/@greatscottlab"},
+            {"name": "Raspberry Pi Docs", "link": "https://www.raspberrypi.org/documentation"}
+        ]
+    },
+
+    "Network Engineer": {
+        "steps": [
+            "Networking Basics",
+            "TCP/IP",
+            "Routing & Switching",
+            "Security",
+            "Projects"
+        ],
+        "skills": ["Networking", "TCP/IP", "Linux"],
+        "projects": [
+            "Network Setup",
+            "LAN Configuration"
+        ],
+        "resources": [
+            {"name": "Cisco Networking Academy", "link": "https://www.netacad.com"},
+            {"name": "CompTIA Network+", "link": "https://www.comptia.org"},
+            {"name": "NetworkChuck YouTube", "link": "https://www.youtube.com/@NetworkChuck"},
+            {"name": "TCP/IP Guide", "link": "http://www.tcpipguide.com"}
+        ]
+    },
+
+    "Technical Support Engineer": {
+        "steps": [
+            "Operating Systems",
+            "Networking Basics",
+            "Troubleshooting",
+            "Customer Support",
+            "Projects"
+        ],
+        "skills": ["Troubleshooting", "Networking", "OS"],
+        "projects": [
+            "System Debugging",
+            "Helpdesk Simulation"
+        ],
+        "resources": [
+            {"name": "Google IT Support", "link": "https://www.coursera.org/professional-certificates/google-it-support"},
+            {"name": "Microsoft Learn", "link": "https://learn.microsoft.com"},
+            {"name": "KevTech YouTube", "link": "https://www.youtube.com/@KevTechITSupport"},
+            {"name": "Cisco Basics", "link": "https://www.netacad.com"}
+        ]
+    },
+
+    "Product Manager": {
+        "steps": [
+            "Product Thinking",
+            "Market Research",
+            "Agile & Scrum",
+            "Roadmap Planning",
+            "Projects"
+        ],
+        "skills": ["Agile", "Scrum", "Communication"],
+        "projects": [
+            "Product Case Study",
+            "Feature Planning"
+        ],
+        "resources": [
+            {"name": "Product School", "link": "https://productschool.com"},
+            {"name": "Scrum Guide", "link": "https://scrumguides.org"},
+            {"name": "Product Manager HQ YouTube", "link": "https://www.youtube.com/@ProductManagerHQ"},
+            {"name": "Coursera Product Management", "link": "https://www.coursera.org"}
+        ]
     }
+
 
 }
