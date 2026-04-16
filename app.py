@@ -90,6 +90,13 @@ def set_user():
     data = request.json
     session["user_id"] = data["user_id"]
     return jsonify({"message": "Session set"})
+
+@app.route("/resume")
+def resume():
+    if "user_id" not in session:
+        return redirect("/login")
+    career = session.get("career")
+    return render_template('resume.html', career=career)
   
 
 @app.route("/logout")
