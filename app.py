@@ -41,8 +41,11 @@ def predict():
     q = request.form['qualification']
     skills = request.form.getlist('skills[]')
     interests = request.form.getlist('interests[]')
+    traits = request.form.getlist('traits[]')
+    
 
-    career = predict_career(q, skills, interests)
+
+    career = predict_career(q, skills, interests,traits)
 
     # ✅ store career in session
     session['career'] = career
