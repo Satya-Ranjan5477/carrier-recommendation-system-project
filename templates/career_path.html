@@ -44,28 +44,42 @@
     </main>
 
     <script>
+        const urlCareer = new URLSearchParams(window.location.search).get("career") || "";
+        const selectedCareer = {{ selected_career|default('', true)|tojson }};
         const userId = localStorage.getItem("userId");
         const history = JSON.parse(localStorage.getItem(`history_${userId}`)) || [];
-        const careers = [...new Set(history.map(h => h.career))];
-        let currentCareer = history.length ? history[history.length - 1].career : "";
+        const activeCareerKey = userId ? `activeCareer_${userId}` : "activeCareer";
+        const careers = [...new Set(history.map(h => h.career).filter(Boolean))];
+        const preferredCareer = urlCareer || selectedCareer;
+        if (preferredCareer && !careers.includes(preferredCareer)) {
+            careers.push(preferredCareer);
+        }
+        let currentCareer = preferredCareer || localStorage.getItem(activeCareerKey) || (history.length ? history[history.length - 1].career : "");
         const historyBox = document.getElementById("historyBox");
 
         if (careers.length === 0) {
             historyBox.innerHTML = "<p>No career history found. Complete a quiz first.</p>";
         }
 
-        careers.forEach(c => {
-            historyBox.innerHTML += `<button onclick="loadCareer('${c}')">${c}</button>`;
+        careers.forEach(careerName => {
+            const button = document.createElement("button");
+            button.type = "button";
+            button.textContent = careerName;
+            button.addEventListener("click", () => loadCareer(careerName));
+            historyBox.appendChild(button);
         });
 
         function loadCareer(career) {
             currentCareer = career;
+            localStorage.setItem(activeCareerKey, career);
+            const nextUrl = `${window.location.pathname}?career=${encodeURIComponent(career)}`;
+            window.history.replaceState({}, "", nextUrl);
             document.getElementById("title").innerText = career + " Roadmap";
 
             const progressKey = `progress_${career}_${userId}`;
             let progressData = JSON.parse(localStorage.getItem(progressKey)) || [];
 
-            fetch(`/get-path/${career}`)
+            fetch(`/get-path/${encodeURIComponent(career)}`)
                 .then(res => res.json())
                 .then(data => {
                     const steps = data.steps || [];
@@ -75,6 +89,16 @@
 
                     const timeline = document.getElementById("timeline");
                     timeline.innerHTML = "";
+                    
+                    if (!steps.length && !skills.length && !projects.length && !resources.length) {
+                        timeline.innerHTML = `
+                            <div class="step-box left">
+                                <div class="content">
+                                    No learning path is available for ${career} yet.
+                                </div>
+                            </div>
+                        `;
+                    }
 
                     steps.forEach((step, i) => {
                         const checked = progressData.includes(i) ? "checked" : "";
@@ -129,10 +153,10 @@
 
             localStorage.setItem(progressKey, JSON.stringify(progressData));
 
-            fetch(`/get-path/${currentCareer}`)
+            fetch(`/get-path/${encodeURIComponent(currentCareer)}`)
                 .then(res => res.json())
                 .then(data => {
-                    updateProgressUI(data.steps.length, progressData);
+                    updateProgressUI((data.steps || []).length, progressData);
                 });
         }
 

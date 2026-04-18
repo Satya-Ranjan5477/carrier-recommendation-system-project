@@ -1,11 +1,19 @@
-from flask import Flask, render_template, request,jsonify, session ,redirect
+from flask import Flask, render_template, request,jsonify, session ,redirect, send_from_directory
+
+from carrier_skill_catalog import REQUIRED_SKILLS_BY_CAREER
 from predict import predict_career
 from quiz_data import get_random_questions
 from career_path_data import career_paths
+from skill_gap import analyze_skill_gap
+
 
 
 app = Flask(__name__)
 app.secret_key = "secret123"
+
+@app.route("/favicon.ico")
+def favicon():
+    return send_from_directory(app.static_folder, "career photo.png", mimetype="image/png")
 
 
 @app.route("/")
@@ -46,11 +54,40 @@ def predict():
 
 
     career = predict_career(q, skills, interests,traits)
+    skill_gap = analyze_skill_gap(
+        predicted_career=career,
+        user_skills=skills,
+        required_skills_by_career=REQUIRED_SKILLS_BY_CAREER,
+    )
 
     # ✅ store career in session
-    session['career'] = career
+    normalized_traits = {trait.strip().lower() for trait in traits if isinstance(trait, str) and trait.strip()}
+    trait_bonus = 0
 
-    return render_template('result.html', career=career)
+    if 'analytical' in normalized_traits:
+        trait_bonus += 5
+    if 'problem solving' in normalized_traits:
+        trait_bonus += 5
+    if 'logical thinking' in normalized_traits:
+        trait_bonus += 4
+    if 'creativity' in normalized_traits:
+        trait_bonus += 3
+    if 'curiosity' in normalized_traits:
+        trait_bonus += 2
+
+    base_score = skill_gap.get('readiness_percentage', 0)
+    readiness_score = min(base_score + trait_bonus, 100)
+    skill_gap['readiness_score'] = readiness_score
+    skill_gap['readiness_percentage'] = readiness_score
+    total_skills = len(skill_gap.get('matched_skills', [])) + len(skill_gap.get('missing_skills', []))
+
+    session['career'] = career
+    session['skill_gap'] = skill_gap
+    session['traits'] = traits
+    session['interests'] = interests
+    session['total_skills'] = total_skills
+
+    return render_template('result.html', career=career, skill_gap=skill_gap, traits=traits, interests=interests, total_skills=total_skills)
 
 
 @app.route('/result')
@@ -58,7 +95,11 @@ def result():
     if "user_id" not in session:
         return redirect("/login")
     career = session.get('career')
-    return render_template('result.html', career=career)
+    skill_gap = session.get('skill_gap')
+    traits = session.get('traits', [])
+    interests = session.get('interests', [])
+    total_skills = session.get('total_skills', 0)
+    return render_template('result.html', career=career, skill_gap=skill_gap, traits=traits, interests=interests, total_skills=total_skills)
 
 @app.route("/quiz")
 def quiz_page():
@@ -77,8 +118,9 @@ def get_quiz(career):
 def career_path():
     if "user_id" not in session:
         return redirect("/login")
-    return render_template("career_path.html")
-
+    selected_career = request.args.get("career") or session.get("career") or ""
+    return render_template("career_path.html", selected_career=selected_career)
+    
 
 @app.route("/get-path/<career>")
 def get_path(career):
