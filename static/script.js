@@ -183,8 +183,8 @@ function loadDashboard(userId) {
 
         historyDiv.innerHTML += `
             <p>
-                <b>${item.career}</b> - ${item.score}/${item.total}
-                ${index === 0 ? '<span style="color:green;"> (Latest)</span>' : ''}
+                <b>Attempt ${history.length - index}</b> - ${item.career} - ${item.score}/${item.total}
+                ${index === 0 ? '<span class="latest-badge">(Latest)</span>' : ''}
                 <br>
                 <small>${item.date}</small>
             </p><hr>
@@ -247,18 +247,71 @@ function loadDashboard(userId) {
             }
         });
 
-        window.pieChart = new Chart(pieCanvas.getContext("2d"), {
-            type: "doughnut",
-            data: {
-                labels: ["Good", "Average", "Poor"],
-                datasets: [{
-                    data: [good, average, poor]
-                }]
+      
+        const ctx = document.getElementById("pieChart").getContext("2d");
+
+        const pieChart = new Chart(ctx, {
+         type: "doughnut",
+           data: {
+            labels: ["Good", "Average", "Poor"],
+            datasets: [{
+            data: [good, average, poor],
+            backgroundColor: ['#49A9EA', '#FF6384', '#FF9F40'],
+            borderWidth: 0
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        
+        cutout: "70%",
+        plugins: {
+            legend: {
+                position: "bottom",
+                labels: {
+                    color: "#ccc"
+                }
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        let total = context.dataset.data.reduce((a, b) => a + b, 0);
+                        let value = context.raw;
+                        let percent = ((value / total) * 100).toFixed(1);
+                        return `${context.label}: ${value} attempts (${percent}%)`;
+                    }
+                }
             }
-        });
+        }
+    },
+    plugins: [{
+        id: "centerText",
+        beforeDraw(chart) {
+            const { width, height, ctx } = chart;
+
+            let total = chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+
+            ctx.restore();
+            ctx.font = "bold 16px sans-serif";
+            ctx.fillStyle = "#fff";
+            ctx.textAlign = "center";
+
+            ctx.fillText(total + " Attempts", width / 2, height / 2);
+            ctx.save();
+        }
+    }]
+});
+
+let insight = "";
+
+if (good >= average && good >= poor) {
+    insight = "You are consistently performing well 🎯";
+} else if (average >= good && average >= poor) {
+    insight = "Your performance is moderate, improvement needed 📈";
+} else {
+    insight = "Your performance needs improvement ⚠️";
+}
+
+document.getElementById("insightText").innerText = insight;
     }, 150);
 }

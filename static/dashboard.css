@@ -193,14 +193,19 @@ body.dashboard-body {
     grid-template-columns: 1.02fr 1fr;
     gap: 25px;
     width: 100%;
+    
 }
 
 .left-panel,
 .right-panel {
+    
     display: flex;
     flex-direction: column;
     gap: 20px;
+    
 }
+
+
 
 .card1 {
     width: 100%;
@@ -232,17 +237,24 @@ body.dashboard-body {
 #barChart {
     min-width: 100%;
     height: 350px !important;
+   
     margin-top: 15px;
 }
 
 #pieChart {
     width: 100% !important;
-    height: 345px !important;
+    height: 325px !important;
+ 
     margin-top: 15px;
 }
-
+#insightText {
+    text-align: center;
+   margin-top: 5px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.8);
+}
 #history {
-    max-height: 200px;
+    max-height: 110px;
     overflow-y: auto;
 }
 
@@ -264,6 +276,7 @@ body.dashboard-body {
 #history::-webkit-scrollbar-track {
     background: rgba(0, 0, 0, 0.1);
 }
+
 
 @media (max-width: 968px) {
     .grid-container {

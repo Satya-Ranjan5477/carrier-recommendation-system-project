@@ -53,6 +53,11 @@ nav.site-nav {
     color: #7de2f4;
     text-shadow: 0 0 12px rgba(125, 226, 244, 0.3);
 }
+.nav-links a.active {
+    background: linear-gradient(135deg, #5b5df6, #7c3aed);
+    color: #fff;
+    border-radius: 20px;
+}
 
 /* Footer Styles */
 footer.site-footer {
