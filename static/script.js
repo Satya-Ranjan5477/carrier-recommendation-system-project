@@ -1,14 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
 
-const firebaseConfig = {
-    apiKey: "AIzaSyBJH6QrR5sEHRzdTeCV-N3dl99rDs_1xzk",
-    authDomain: "career-mitracom.firebaseapp.com",
-    projectId: "career-mitracom",
-    storageBucket: "career-mitracom.firebasestorage.app",
-    messagingSenderId: "298890333500",
-    appId: "1:298890333500:web:f8acde75ceb927d7246239"
-};
+const firebaseConfig = window.firebaseConfig;
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);

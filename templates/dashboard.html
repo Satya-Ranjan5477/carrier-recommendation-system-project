@@ -113,6 +113,17 @@
 
 </div>
 
+<script>
+window.firebaseConfig = {
+ apiKey: "{{ firebase_config.apiKey }}",
+ authDomain: "{{ firebase_config.authDomain }}",
+ projectId: "{{ firebase_config.projectId }}",
+ storageBucket: "{{ firebase_config.storageBucket }}",
+ messagingSenderId: "{{ firebase_config.messagingSenderId }}",
+ appId: "{{ firebase_config.appId }}"
+};
+</script>
+
 <script type="module" src="{{ url_for('static',filename='script.js') }}"></script>
 
 {% include 'partials/footer.html' %}

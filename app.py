@@ -1,16 +1,29 @@
 from flask import Flask, render_template, request,jsonify, session ,redirect, send_from_directory
-
 from carrier_skill_catalog import REQUIRED_SKILLS_BY_CAREER
 from predict import predict_career
 from quiz_data import get_random_questions
 from career_path_data import career_paths
 from skill_gap import analyze_skill_gap
+from dotenv import load_dotenv
+import os
 
+
+load_dotenv()
 
 
 app = Flask(__name__)
-app.secret_key = "secret123"
+app.secret_key = os.getenv("FLASK_SECRET_KEY")
 
+
+def firebase_config():
+    return {
+      "apiKey": os.getenv("FIREBASE_API_KEY"),
+      "authDomain": os.getenv("FIREBASE_AUTH_DOMAIN"),
+      "projectId": os.getenv("FIREBASE_PROJECT_ID"),
+      "storageBucket": os.getenv("FIREBASE_STORAGE_BUCKET"),
+      "messagingSenderId": os.getenv("FIREBASE_MESSAGING_SENDER_ID"),
+      "appId": os.getenv("FIREBASE_APP_ID")
+    }
 @app.route("/favicon.ico")
 def favicon():
     return send_from_directory(app.static_folder, "career photo.png", mimetype="image/png")
@@ -25,17 +38,17 @@ def home():
 def dashboard():
     if "user_id" not in session:
         return redirect("/login")
-    return render_template ('dashboard.html')
+    return render_template ('dashboard.html',firebase_config=firebase_config())
 
 
 @app.route("/login")
 def login():
-    return render_template ('login.html')
+    return render_template ('login.html',firebase_config=firebase_config())
 
 
 @app.route("/register")
 def register():
-    return render_template ('register.html')
+    return render_template ('register.html',firebase_config=firebase_config())
 
 
 @app.route('/form')
