@@ -8,6 +8,9 @@ from dotenv import load_dotenv
 import os
 
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+
 load_dotenv()
 
 
@@ -24,9 +27,6 @@ def firebase_config():
       "messagingSenderId": os.getenv("FIREBASE_MESSAGING_SENDER_ID"),
       "appId": os.getenv("FIREBASE_APP_ID")
     }
-@app.route("/favicon.ico")
-def favicon():
-    return send_from_directory(app.static_folder, "career photo.png", mimetype="image/png")
 
 
 @app.route("/")
@@ -161,5 +161,8 @@ def logout():
 
 
 
+'''if __name__ == "__main__":
+    app.run(debug=True)'''
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)

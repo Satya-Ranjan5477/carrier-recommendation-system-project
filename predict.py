@@ -1,12 +1,15 @@
 import joblib
 import numpy as np
+import os
 
-model = joblib.load("model.pkl")
-le_q = joblib.load("le_q.pkl")
-le_c = joblib.load("le_c.pkl")
-mlb_skills = joblib.load("mlb_skills.pkl")
-mlb_interests = joblib.load("mlb_interests.pkl")
-mlb_traits = joblib.load("mlb_traits.pkl")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+model = joblib.load(os.path.join(BASE_DIR, "model.pkl"))
+le_q = joblib.load(os.path.join(BASE_DIR, "le_q.pkl"))
+le_c = joblib.load(os.path.join(BASE_DIR, "le_c.pkl"))
+mlb_skills = joblib.load(os.path.join(BASE_DIR, "mlb_skills.pkl"))
+mlb_interests = joblib.load(os.path.join(BASE_DIR, "mlb_interests.pkl"))
+mlb_traits = joblib.load(os.path.join(BASE_DIR, "mlb_traits.pkl"))
 def normalize_list(lst):
     return [x.strip().lower() for x in lst]
 
@@ -23,16 +26,3 @@ def predict_career(q, skills, interests,traits):
     pred = model.predict(X)
     return le_c.inverse_transform(pred)[0]
 
-    skills_n = normalize_list(skills)
-    interests_n = normalize_list(interests)
-    traits_n = normalize_list(traits)
-    raw_keywords = career_keywords.get(career, {})
-
-    keywords = {
-       "skills": normalize_list(raw_keywords.get("skills", [])),
-       "interests": normalize_list(raw_keywords.get("interests", [])),
-       "traits": normalize_list(raw_keywords.get("traits", []))
-    }
-
-
-    return career
