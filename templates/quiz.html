@@ -83,6 +83,8 @@
                 localStorage.setItem(`totalQuestions_${userId}`, total);
                 localStorage.setItem(`quizAnalysis_${userId}`, JSON.stringify(analysis));
 
+              
+
                 const result = {
                     career: career,
                     score: score,
@@ -95,7 +97,7 @@
                 history.push(result);
                 localStorage.setItem(historyKey, JSON.stringify(history));
 
-                window.location.href = "/result";
+                 window.location.href = "/dashboard";
             }
 
             window.submitQuiz = submitQuiz;
