@@ -100,7 +100,9 @@
 
             <div class="card1">
                 <h3>🥧 Score Distribution</h3>
-                <canvas id="pieChart"></canvas>
+                <div class="pie-wrapper">
+                 <canvas id="pieChart"></canvas>
+                </div>
                 <div id="insightText"></div>
             </div>
 
@@ -122,6 +124,8 @@ window.firebaseConfig = {
  messagingSenderId: "{{ firebase_config.messagingSenderId }}",
  appId: "{{ firebase_config.appId }}"
 };
+
+
 </script>
 
 <script type="module" src="{{ url_for('static',filename='script.js') }}"></script>

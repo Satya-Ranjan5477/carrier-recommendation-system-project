@@ -65,6 +65,57 @@ body::after {
   bottom: 60px;
   background: rgba(79, 140, 255, 0.18);
 }
+.back-btn{
+  position: fixed;
+  top: 22px;
+  left: 22px;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 10px 16px;
+  border-radius: 999px;
+
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+
+  color: #ffffff;
+
+  /* Modern SaaS gradient */
+  background: linear-gradient(135deg, #4f8cff, #7c4dff);
+
+  border: 1px solid rgba(255, 255, 255, 0.18);
+
+  /* Glass + depth */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  box-shadow:
+    0 10px 28px rgba(79, 140, 255, 0.25),
+    0 4px 12px rgba(0, 0, 0, 0.25);
+
+  transition: all 0.25s ease;
+}
+
+/* Hover effect (modern SaaS feel) */
+.back-btn:hover{
+  transform: translateX(-4px) scale(1.05);
+
+  background: linear-gradient(135deg, #5a95ff, #8a5cff);
+
+  box-shadow:
+    0 14px 35px rgba(124, 77, 255, 0.35),
+    0 6px 18px rgba(0, 0, 0, 0.3);
+}
+
+/* Click effect */
+.back-btn:active{
+  transform: scale(0.96);
+}
 
 .container {
   position: relative;

@@ -240,6 +240,11 @@ body.dashboard-body {
    
     margin-top: 15px;
 }
+.pie-wrapper{
+   width:320px;
+   height:328px;
+   margin:auto;
+}
 
 #pieChart {
     width: 100% !important;

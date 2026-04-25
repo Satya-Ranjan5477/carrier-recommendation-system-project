@@ -27,7 +27,36 @@
                     <h2 class="result-label">Recommended Career</h2>
                     <h1 class="career-title">{{ career or 'Career not found' }}</h1>
                     <p class="result-description">You are {{ gap.readiness_percentage or 0 }}% ready for {{ career or 'this career path' }}. Focus on <strong>{{ gap.missing_skills[0] if gap.missing_skills else 'building real-world projects' }}</strong> to improve fastest.</p>
-                    <a href="{{ url_for('career_path') }}" class="result-cta__button result-hero__button">Start Learning Path</a>
+                      <div id="quizStatusBox" class="quiz-summary">
+
+                              <div id="noAttempt">
+                                  <p>📝 Take quiz to show result.</p>
+                              </div>
+
+                              <div id="previousAttempt" hidden>
+                                  <p>
+                                      last Attempt:
+                                      <strong id="previousScore"></strong>
+                                  </p>
+                              </div>
+
+                              <div id="currentAttempt">
+                                  <p id="currentPlaceholder">
+                                      Current Attempt: Take quiz to show status.
+                                     </p>
+
+                                  <p id="currentRealScore" hidden>
+                                      Current Attempt:
+                                      <strong id="currentScore"></strong>
+                                  </p>
+                              </div>
+                        </div>
+
+                        <button onclick="startQuiz()"
+                             class="result-cta__button result-hero__button">
+                             Start Career Quiz
+                           </button>
+
                 </div>
 
                 <div class="result-hero__indicator">
@@ -236,7 +265,9 @@
 
 
             <div class="result-actions">
-                <button type="button" class="primary-action" onclick="startQuiz()">Start Career Quiz</button>
+                <a href="{{ url_for('career_path') }}" class="primary-action">
+                     Start Learning Path
+                </a>
                 <button type="button" id="analysisBtn" class="secondary-action" onclick="showAnalysis()" hidden>Result Analysis</button>
                 <a href="{{ url_for('form') }}" class="secondary-action">Try another path</a>
                 <a href="{{ url_for('dashboard') }}" class="secondary-action">Go to Dashboard</a>
@@ -251,15 +282,105 @@
         const career = {{ career|tojson }};
         const skillGap = {{ gap|tojson }};
         const userId = localStorage.getItem("userId");
+        const params = new URLSearchParams(window.location.search);
+        const newAttempt = params.get("new_attempt"); 
+          //if(!newAttempt){
+             //   analysisBtn.hidden = true;
+             //}
+        const noAttempt = document.getElementById("noAttempt");
+        const previousAttempt = document.getElementById("previousAttempt");
+
+        const currentPlaceholder = document.getElementById("currentPlaceholder");
+        const currentRealScore = document.getElementById("currentRealScore");
+
+        const previousScore = document.getElementById("previousScore");
+        const currentScore = document.getElementById("currentScore");
+
         const analysisBtn = document.getElementById("analysisBtn");
         const analysisBox = document.getElementById("analysisBox");
         const score = userId ? localStorage.getItem(`quizScore_${userId}`) : null;
         const total = userId ? localStorage.getItem(`totalQuestions_${userId}`) : null;
-        const analysis = userId ? JSON.parse(localStorage.getItem(`quizAnalysis_${userId}`) || "[]") : [];
+       
+        const analysisKey = `quizAnalysis_${userId}_${career}`;
+        const analysis = userId
+           ? JSON.parse(localStorage.getItem(analysisKey) || "[]")
+           : [];
+        const historyKey = `history_${userId}`;
+        const history = JSON.parse(        
+        localStorage.getItem(historyKey) || "[]"
+         );
+        
+        const careerHistory = history.filter(        
+         item => item.career === career
+         );
 
-        if (score && total) {
-            analysisBtn.hidden = false;
+        noAttempt.hidden = true;
+        previousAttempt.hidden = true;
+
+        currentPlaceholder.hidden = true;
+        currentRealScore.hidden = true;
+
+        analysisBtn.hidden = true;
+
+        if(careerHistory.length===0){
+
+           noAttempt.hidden=false;
+           currentPlaceholder.hidden=false;
         }
+
+
+        else if(careerHistory.length>=1 && !newAttempt){
+
+           previousAttempt.hidden=false;
+           currentPlaceholder.hidden=false;
+
+           let last =
+              careerHistory[careerHistory.length-1];
+
+           previousScore.textContent=
+              `${last.score}/${last.total}`;
+
+            
+        }
+
+        else if(careerHistory.length>=2 && newAttempt){
+
+           previousAttempt.hidden=false;
+
+           let previous=
+              careerHistory[careerHistory.length-2];
+
+           let current=
+              careerHistory[careerHistory.length-1];
+
+           previousScore.textContent=
+              `${previous.score}/${previous.total}`;
+
+           currentScore.textContent=
+              `${current.score}/${current.total}`;
+
+           currentRealScore.hidden=false;
+
+           if(analysis.length){
+              analysisBtn.hidden=false;
+            }
+        }
+
+
+
+        else if(careerHistory.length===1 && newAttempt){
+
+           currentScore.textContent=
+              `${careerHistory[0].score}/${careerHistory[0].total}`;
+
+           currentRealScore.hidden=false;
+
+           if(analysis.length){
+              analysisBtn.hidden=false;
+           }
+        }
+
+
 
         function startQuiz() {
             if (!career) {
