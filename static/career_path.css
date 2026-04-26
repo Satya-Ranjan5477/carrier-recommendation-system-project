@@ -474,7 +474,7 @@ html {
 }
 
 /* Responsive adjustments */
-@media (max-width: 768px) {
+/*@media (max-width: 768px) {
     .roadmap-shell {
         padding: 1rem 1rem 2.5rem;
     }
@@ -533,7 +533,7 @@ html {
         margin: 1rem auto;
     }
 
-    /* Adjust glow height for mobile */
+     Adjust glow height for mobile 
     .content:hover::before {
         height: 40px;
     }
@@ -541,6 +541,121 @@ html {
     .box:hover::before {
         height: 50px;
     }
+}*/
+
+/* ===== MOBILE VIEW FIX ===== */
+@media screen and (max-width:768px){
+
+    body.roadmap-body{
+        overflow-x:hidden;
+    }
+
+    .roadmap-shell{
+        padding:16px 12px 40px;
+    }
+
+    .roadmap-title{
+        font-size:1.7rem;
+        line-height:1.3;
+        margin-top:60px;
+    }
+
+    /* Back button smaller for mobile */
+    .back-arrow{
+        width:44px;
+        height:44px;
+        top:18px;
+        left:14px;
+        font-size:24px;
+    }
+
+    /* History buttons stack nicely */
+    .history{
+        gap:10px;
+    }
+
+    .history button{
+        width:100%;
+        max-width:260px;
+        padding:12px 18px;
+        font-size:14px;
+    }
+
+    /* Progress compact */
+    .progress{
+        border-radius:20px;
+        padding:14px;
+    }
+
+    /* Move timeline line left */
+    .timeline::after{
+        left:18px;
+    }
+
+    .step-box{
+        width:100%;
+        left:0 !important;
+        padding-left:48px !important;
+        padding-right:6px !important;
+        margin-bottom:20px;
+    }
+
+    .step-box::before{
+        left:10px !important;
+        width:12px;
+        height:12px;
+    }
+
+    /* Full width cards */
+    .content{
+        width:100%;
+        padding:16px;
+        border-radius:18px;
+    }
+
+    .content label{
+        gap:12px;
+        font-size:15px;
+        line-height:1.5;
+    }
+
+    .content input[type="checkbox"]{
+        width:18px;
+        height:18px;
+    }
+
+    /* Resources stack */
+    .resource-card{
+        display:flex;
+        width:100%;
+        justify-content:center;
+        margin-bottom:10px;
+    }
+
+    /* Single column boxes */
+    .extra-section{
+        grid-template-columns:1fr;
+        gap:16px;
+    }
+
+    .box{
+        padding:18px;
+        border-radius:20px;
+    }
+
+    .box h3{
+        font-size:1rem;
+    }
+
+    .items{
+        gap:8px;
+    }
+
+    .items span{
+        font-size:12px;
+        padding:8px 12px;
+    }
+
 }
 
 /* Tablet adjustments */

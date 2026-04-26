@@ -283,6 +283,124 @@ body.dashboard-body {
 }
 
 
+/* ===== MOBILE DASHBOARD FIX ===== */
+@media screen and (max-width:768px){
+
+    body.dashboard-body{
+        overflow-x:hidden;
+    }
+
+    .dashboard{
+        flex-direction:column;
+    }
+
+    /* Sidebar becomes top horizontal strip */
+    .sidebar{
+        width:100%;
+        min-height:auto;
+        padding:14px 12px;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        gap:14px;
+    }
+
+    .profile{
+        min-width:auto;
+        text-align:center;
+        margin-bottom:10px;
+    }
+
+    .profile img{
+        width:85px;
+        height:85px;
+    }
+
+    .menu{
+        display:flex;
+        flex-wrap:nowrap;
+        overflow-x:auto;
+        gap:10px;
+        width:100%;
+        justify-content:center;
+        padding-bottom:6px;
+    }
+
+    .menu button{
+        min-width:135px;
+        text-align:center;
+        padding:10px 14px;
+    }
+
+    .main-content{
+        padding:16px 12px 30px;
+        border-radius:0;
+    }
+
+    .header-title{
+        font-size:22px;
+    }
+
+    .start-box{
+        padding:18px;
+    }
+
+    /* KPI cards centered */
+    .kpi-container{
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        gap:16px;
+        margin:18px 0;
+    }
+
+    .kpi-card{
+        width:100%;
+        max-width:340px;
+        margin:0 auto;
+        min-width:unset;
+    }
+
+    /* Grid stacks */
+    .grid-container{
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        gap:18px;
+    }
+
+    .left-panel,
+    .right-panel{
+        width:100%;
+        align-items:center;
+    }
+
+    /* Cards centered */
+    .card1{
+        width:100%;
+        max-width:340px;
+        min-height:unset;
+        padding:16px;
+        margin:0 auto;
+    }
+
+    /* Charts fit mobile */
+    #barChart,
+    #pieChart{
+        width:100% !important;
+        height:250px !important;
+        min-width:unset;
+    }
+
+    .pie-wrapper{
+        width:100%;
+        max-width:320px;
+        height:auto;
+        margin:auto;
+    }
+
+}
+
 @media (max-width: 968px) {
     .grid-container {
         grid-template-columns: 1fr;
@@ -293,66 +411,3 @@ body.dashboard-body {
     }
 }
 
-@media (max-width: 768px) {
-    .dashboard {
-        flex-direction: column;
-    }
-
-    .sidebar {
-        width: 100%;
-        min-height: auto;
-        display: flex;
-        flex-direction: row;
-        overflow-x: auto;
-        gap: 10px;
-        padding: 10px;
-    }
-
-    .profile {
-        margin-bottom: 0;
-        min-width: 120px;
-    }
-
-    .menu {
-        display: flex;
-        gap: 10px;
-        flex-wrap: nowrap;
-        overflow-x: auto;
-    }
-
-    .menu button {
-        min-width: 140px;
-        text-align: center;
-        padding: 10px;
-    }
-
-    .main-content {
-        padding: 15px;
-        border-radius: 0;
-    }
-
-    .header-title {
-        font-size: 22px;
-    }
-
-    .kpi-container {
-        flex-direction: column;
-        margin: 15px 0;
-    }
-
-    .grid-container {
-        grid-template-columns: 1fr;
-    }
-
-    #barChart,
-    #pieChart {
-        width: 100% !important;
-        min-width: unset;
-        height: 250px !important;
-    }
-
-    .card1 {
-        min-height: 150px;
-        padding: 15px;
-    }
-}
