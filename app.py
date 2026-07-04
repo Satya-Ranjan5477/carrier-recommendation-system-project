@@ -160,15 +160,7 @@ def logout():
     return redirect("/login")
 
 
-@app.route("/debug-env")
-def debug_env():
-    import os
-    return {
-        "FIREBASE_API_KEY": os.environ.get("FIREBASE_API_KEY"),
-        "FLASK_SECRET_KEY": os.environ.get("FLASK_SECRET_KEY"),
-        "ALL_ENV_KEYS": list(os.environ.keys())
-    }
-
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
+
