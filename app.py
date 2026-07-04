@@ -162,13 +162,11 @@ def logout():
 
 @app.route("/debug-env")
 def debug_env():
+    import os
     return {
-        "apiKey": os.getenv("FIREBASE_API_KEY"),
-        "authDomain": os.getenv("FIREBASE_AUTH_DOMAIN"),
-        "projectId": os.getenv("FIREBASE_PROJECT_ID"),
-        "storageBucket": os.getenv("FIREBASE_STORAGE_BUCKET"),
-        "messagingSenderId": os.getenv("FIREBASE_MESSAGING_SENDER_ID"),
-        "appId": os.getenv("FIREBASE_APP_ID")
+        "FIREBASE_API_KEY": os.environ.get("FIREBASE_API_KEY"),
+        "FLASK_SECRET_KEY": os.environ.get("FLASK_SECRET_KEY"),
+        "ALL_ENV_KEYS": list(os.environ.keys())
     }
 
 if __name__ == "__main__":
